@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'dart:math' as math;
 import '../../core/utils/localization/language_constants.dart';
+import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -105,7 +108,7 @@ class _SplashScreenState extends State<SplashScreen>
   void _navigateToHome() {
     Future.delayed(const Duration(seconds: 4), () {
       // TODO: Navigate to main screen
-      // Get.offAll(() => const HomeScreen());
+      Get.offAll(() => const HomeScreen());
     });
   }
 
