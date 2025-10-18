@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spacex_flutter_app/presentation/screens/home_screen.dart';
 
 import 'core/utils/theme.dart';
 import 'core/utils/localization/spacex_localization.dart';
@@ -93,6 +94,7 @@ class _SpaceXAppState extends State<SpaceXApp> {
                 home: const SplashScreen(),
                 getPages: [
                   GetPage(name: '/', page: () => const SplashScreen()),
+                  GetPage(name: '/home', page: () => const HomeScreen()),
                 ],
               );
             },

@@ -1,17 +1,19 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "spacex_flutter_app(debug)",
-            "type": "dart",
-            "request": "launch",
-            "program": "lib/main.dart"
-        }, 
-        {
-            "name": "spacex_flutter_app(release)",
-            "type": "dart",
-            "request": "launch",
-            "flutterMode": "release"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "spacex_flutter_app(debug)",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "args": ["-v"]
+    },
+    {
+      "name": "spacex_flutter_app(release)",
+      "type": "dart",
+      "request": "launch",
+      "flutterMode": "release",
+      "args": ["-v"]
+    }
+  ]
 }
