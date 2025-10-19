@@ -13,15 +13,18 @@ class AppColors {
 
   // Background Colors
   static const Color background = Color(0xFF0F172A); // Dark Space
-  static const Color surface = Color(0xFF1E293B); // Card Surface
-  static const Color lightBackground = Color(0xFFF8FAFC); // Light Background
+  static const Color darkCardColor = Color(0xFF1E293B); // Dark Card Surface
+  static const Color lightCardColor = Color(0xFFF5F5F5); // Light Card Surface
+  static const Color lightBackground = Color(0xFFFAFAFA); // Light Background
   static const Color lightSurface = Color(0xFFFFFFFF); // Light Surface
 
   // Text Colors
-  static const Color textPrimary = Color(0xFFFFFFFF);
+  // static const Color textPrimary = Color(0xFFFFFFFF);
+  static const Color lightTextPrimary = Color(0xFFEEF1F6);
+  static const Color darkTextPrimary = Color(0xFFEEF1F6);
   static const Color textSecondary = Color(0xFF94A3B8);
-  static const Color textLight = Color(0xFF1E293B);
   static const Color textLightSecondary = Color(0xFF64748B);
+  static const Color lightGrey = Color(0xFF9298A6);
 
   // Gradient Colors
   static const LinearGradient spaceGradient = LinearGradient(

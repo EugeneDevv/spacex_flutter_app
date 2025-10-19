@@ -9,14 +9,27 @@ class GraphQLRepositoryImpl {
   // Access the client via the static getter, no need for injection here
   GraphQLClient get _client => GraphQLService.client;
 
-  // Constructor is clean as client is accessed statically
   GraphQLRepositoryImpl();
 
-  /// Executes a generic GraphQL Query.
-  /// Returns a list of raw maps.
-  Future<List<Map<String, dynamic>>> executeQuery({
+  /// Handles error checking for any GraphQL QueryResult.
+  void _checkForErrors(QueryResult result) {
+    if (result.hasException) {
+      if (kDebugMode) {
+        print('GraphQL Error: ${result.exception.toString()}');
+        if (result.exception?.linkException != null) {
+          print(
+              'Link Exception: ${result.exception!.linkException.toString()}');
+        }
+      }
+      throw Exception(
+          'Failed to load data: Check network or API configuration. ${result.exception.toString()}');
+    }
+  }
+
+  /// Executes a GraphQL Query that is expected to return a single Map (object).
+  Future<Map<String, dynamic>> executeSingleQuery({
     required String query,
-    required String queryName, // e.g., 'launchesPast', 'rockets', etc.
+    required String queryName, // e.g., "launch"
     Map<String, dynamic>? variables,
   }) async {
     final QueryOptions options = QueryOptions(
@@ -25,16 +38,36 @@ class GraphQLRepositoryImpl {
       fetchPolicy: FetchPolicy.networkOnly,
     );
 
-    // Use the client getter
     final QueryResult result = await _client.query(options);
 
-    if (result.hasException) {
-      if (kDebugMode) {
-        print('GraphQL Error: ${result.exception.toString()}');
-      }
-      // Throw the exception to be caught by the notifier/provider
-      throw Exception('Failed to load data: ${result.exception.toString()}');
+    _checkForErrors(result);
+
+    // Safely extract the data map based on the query name
+    final data = result.data?[queryName] as Map<String, dynamic>?;
+
+    if (data == null) {
+      // If the data is null, the object was not found.
+      throw Exception('Object not found for query: $queryName');
     }
+
+    return data;
+  }
+
+  /// Executes a GraphQL Query that is expected to return a List of Maps.
+  Future<List<Map<String, dynamic>>> executeListQuery({
+    required String query,
+    required String queryName, // e.g., "launchesPast"
+    Map<String, dynamic>? variables,
+  }) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(query),
+      variables: variables ?? const {},
+      fetchPolicy: FetchPolicy.networkOnly,
+    );
+
+    final QueryResult result = await _client.query(options);
+
+    _checkForErrors(result);
 
     // Safely extract the data list based on the query name
     final data = result.data?[queryName] as List<dynamic>?;

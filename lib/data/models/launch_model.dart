@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:spacex_flutter_app/domain/entities/launch_entity.dart';
+import 'package:spacex_flutter_app/presentation/utils/helper_functions.dart';
 
 part 'launch_model.freezed.dart';
 part 'launch_model.g.dart';
@@ -21,9 +22,20 @@ class LaunchSiteModel with _$LaunchSiteModel {
 }
 
 @freezed
+class RocketBudgetModel with _$RocketBudgetModel {
+  const factory RocketBudgetModel({
+    @JsonKey(name: 'cost_per_launch') double? cost,
+  }) = _RocketBudgetModel;
+
+  factory RocketBudgetModel.fromJson(Map<String, dynamic> json) =>
+      _$RocketBudgetModelFromJson(json);
+}
+
+@freezed
 class RocketModel with _$RocketModel {
   const factory RocketModel({
     @JsonKey(name: 'rocket_name') String? rocketName,
+    RocketBudgetModel? rocket,
   }) = _RocketModel;
 
   factory RocketModel.fromJson(Map<String, dynamic> json) =>
@@ -42,21 +54,6 @@ class LinksModel with _$LinksModel {
       _$LinksModelFromJson(json);
 }
 
-@freezed
-class ShipModel with _$ShipModel {
-  const factory ShipModel({
-    String? abs,
-    required bool active,
-    @JsonKey(name: 'attempted_landings') int? attemptedLandings,
-    @JsonKey(name: 'successful_landings') int? successfulLandings,
-    String? image,
-    String? url,
-  }) = _ShipModel;
-
-  factory ShipModel.fromJson(Map<String, dynamic> json) =>
-      _$ShipModelFromJson(json);
-}
-
 // ------------------------------------
 // MAIN LAUNCH MODEL
 // ------------------------------------
@@ -68,6 +65,7 @@ class LaunchModel with _$LaunchModel {
   const factory LaunchModel({
     required String id,
     @JsonKey(name: 'mission_name') String? missionName,
+    String? details,
     @JsonKey(name: 'launch_date_utc') String? launchDateUtc,
     @JsonKey(name: 'launch_date_local') String? launchDateLocal,
     @JsonKey(name: 'launch_site') LaunchSiteModel? launchSite,
@@ -77,7 +75,6 @@ class LaunchModel with _$LaunchModel {
     @JsonKey(name: 'launch_success') bool? launchSuccess,
     @JsonKey(name: 'launch_year') String? launchYear,
     @JsonKey(name: 'mission_id') @Default([]) List<String>? missionIds,
-    @Default([]) List<ShipModel> ships,
   }) = _LaunchModel;
 
   factory LaunchModel.fromJson(Map<String, dynamic> json) =>
@@ -88,11 +85,18 @@ class LaunchModel with _$LaunchModel {
     return DateTime.tryParse(launchDateUtc ?? '');
   }
 
+  String? get launchCostSummarized {
+    if ((rocket?.rocket?.cost ?? 0) < 1) return null;
+    return formatNumberConcise(rocket!.rocket!.cost!);
+  }
+
   // Conversion from Model to clean Domain Entity
   LaunchEntity toEntity() {
     return LaunchEntity(
       id: id,
       missionName: missionName ?? '',
+      details: details,
+      launchCost: launchCostSummarized,
       launchDateUtc: launchDateUtcEntity,
       launchSiteName: launchSite?.siteNameLong ?? '',
       rocketName: rocket?.rocketName ?? '',
@@ -102,7 +106,6 @@ class LaunchModel with _$LaunchModel {
       isTentative: isTentative ?? false,
       launchSuccess: launchSuccess,
       launchYear: launchYear ?? '',
-      shipCount: ships.length,
     );
   }
 }

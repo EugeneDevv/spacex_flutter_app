@@ -158,6 +158,148 @@ abstract class _LaunchSiteModel implements LaunchSiteModel {
       throw _privateConstructorUsedError;
 }
 
+RocketBudgetModel _$RocketBudgetModelFromJson(Map<String, dynamic> json) {
+  return _RocketBudgetModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RocketBudgetModel {
+  @JsonKey(name: 'cost_per_launch')
+  double? get cost => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RocketBudgetModelCopyWith<RocketBudgetModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RocketBudgetModelCopyWith<$Res> {
+  factory $RocketBudgetModelCopyWith(
+          RocketBudgetModel value, $Res Function(RocketBudgetModel) then) =
+      _$RocketBudgetModelCopyWithImpl<$Res, RocketBudgetModel>;
+  @useResult
+  $Res call({@JsonKey(name: 'cost_per_launch') double? cost});
+}
+
+/// @nodoc
+class _$RocketBudgetModelCopyWithImpl<$Res, $Val extends RocketBudgetModel>
+    implements $RocketBudgetModelCopyWith<$Res> {
+  _$RocketBudgetModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? cost = freezed,
+  }) {
+    return _then(_value.copyWith(
+      cost: freezed == cost
+          ? _value.cost
+          : cost // ignore: cast_nullable_to_non_nullable
+              as double?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$RocketBudgetModelImplCopyWith<$Res>
+    implements $RocketBudgetModelCopyWith<$Res> {
+  factory _$$RocketBudgetModelImplCopyWith(_$RocketBudgetModelImpl value,
+          $Res Function(_$RocketBudgetModelImpl) then) =
+      __$$RocketBudgetModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({@JsonKey(name: 'cost_per_launch') double? cost});
+}
+
+/// @nodoc
+class __$$RocketBudgetModelImplCopyWithImpl<$Res>
+    extends _$RocketBudgetModelCopyWithImpl<$Res, _$RocketBudgetModelImpl>
+    implements _$$RocketBudgetModelImplCopyWith<$Res> {
+  __$$RocketBudgetModelImplCopyWithImpl(_$RocketBudgetModelImpl _value,
+      $Res Function(_$RocketBudgetModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? cost = freezed,
+  }) {
+    return _then(_$RocketBudgetModelImpl(
+      cost: freezed == cost
+          ? _value.cost
+          : cost // ignore: cast_nullable_to_non_nullable
+              as double?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RocketBudgetModelImpl implements _RocketBudgetModel {
+  const _$RocketBudgetModelImpl({@JsonKey(name: 'cost_per_launch') this.cost});
+
+  factory _$RocketBudgetModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RocketBudgetModelImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'cost_per_launch')
+  final double? cost;
+
+  @override
+  String toString() {
+    return 'RocketBudgetModel(cost: $cost)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RocketBudgetModelImpl &&
+            (identical(other.cost, cost) || other.cost == cost));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, cost);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RocketBudgetModelImplCopyWith<_$RocketBudgetModelImpl> get copyWith =>
+      __$$RocketBudgetModelImplCopyWithImpl<_$RocketBudgetModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RocketBudgetModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RocketBudgetModel implements RocketBudgetModel {
+  const factory _RocketBudgetModel(
+          {@JsonKey(name: 'cost_per_launch') final double? cost}) =
+      _$RocketBudgetModelImpl;
+
+  factory _RocketBudgetModel.fromJson(Map<String, dynamic> json) =
+      _$RocketBudgetModelImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'cost_per_launch')
+  double? get cost;
+  @override
+  @JsonKey(ignore: true)
+  _$$RocketBudgetModelImplCopyWith<_$RocketBudgetModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 RocketModel _$RocketModelFromJson(Map<String, dynamic> json) {
   return _RocketModel.fromJson(json);
 }
@@ -166,6 +308,7 @@ RocketModel _$RocketModelFromJson(Map<String, dynamic> json) {
 mixin _$RocketModel {
   @JsonKey(name: 'rocket_name')
   String? get rocketName => throw _privateConstructorUsedError;
+  RocketBudgetModel? get rocket => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -179,7 +322,11 @@ abstract class $RocketModelCopyWith<$Res> {
           RocketModel value, $Res Function(RocketModel) then) =
       _$RocketModelCopyWithImpl<$Res, RocketModel>;
   @useResult
-  $Res call({@JsonKey(name: 'rocket_name') String? rocketName});
+  $Res call(
+      {@JsonKey(name: 'rocket_name') String? rocketName,
+      RocketBudgetModel? rocket});
+
+  $RocketBudgetModelCopyWith<$Res>? get rocket;
 }
 
 /// @nodoc
@@ -196,13 +343,30 @@ class _$RocketModelCopyWithImpl<$Res, $Val extends RocketModel>
   @override
   $Res call({
     Object? rocketName = freezed,
+    Object? rocket = freezed,
   }) {
     return _then(_value.copyWith(
       rocketName: freezed == rocketName
           ? _value.rocketName
           : rocketName // ignore: cast_nullable_to_non_nullable
               as String?,
+      rocket: freezed == rocket
+          ? _value.rocket
+          : rocket // ignore: cast_nullable_to_non_nullable
+              as RocketBudgetModel?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $RocketBudgetModelCopyWith<$Res>? get rocket {
+    if (_value.rocket == null) {
+      return null;
+    }
+
+    return $RocketBudgetModelCopyWith<$Res>(_value.rocket!, (value) {
+      return _then(_value.copyWith(rocket: value) as $Val);
+    });
   }
 }
 
@@ -214,7 +378,12 @@ abstract class _$$RocketModelImplCopyWith<$Res>
       __$$RocketModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@JsonKey(name: 'rocket_name') String? rocketName});
+  $Res call(
+      {@JsonKey(name: 'rocket_name') String? rocketName,
+      RocketBudgetModel? rocket});
+
+  @override
+  $RocketBudgetModelCopyWith<$Res>? get rocket;
 }
 
 /// @nodoc
@@ -229,12 +398,17 @@ class __$$RocketModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? rocketName = freezed,
+    Object? rocket = freezed,
   }) {
     return _then(_$RocketModelImpl(
       rocketName: freezed == rocketName
           ? _value.rocketName
           : rocketName // ignore: cast_nullable_to_non_nullable
               as String?,
+      rocket: freezed == rocket
+          ? _value.rocket
+          : rocket // ignore: cast_nullable_to_non_nullable
+              as RocketBudgetModel?,
     ));
   }
 }
@@ -242,7 +416,8 @@ class __$$RocketModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$RocketModelImpl implements _RocketModel {
-  const _$RocketModelImpl({@JsonKey(name: 'rocket_name') this.rocketName});
+  const _$RocketModelImpl(
+      {@JsonKey(name: 'rocket_name') this.rocketName, this.rocket});
 
   factory _$RocketModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$RocketModelImplFromJson(json);
@@ -250,10 +425,12 @@ class _$RocketModelImpl implements _RocketModel {
   @override
   @JsonKey(name: 'rocket_name')
   final String? rocketName;
+  @override
+  final RocketBudgetModel? rocket;
 
   @override
   String toString() {
-    return 'RocketModel(rocketName: $rocketName)';
+    return 'RocketModel(rocketName: $rocketName, rocket: $rocket)';
   }
 
   @override
@@ -262,12 +439,13 @@ class _$RocketModelImpl implements _RocketModel {
         (other.runtimeType == runtimeType &&
             other is _$RocketModelImpl &&
             (identical(other.rocketName, rocketName) ||
-                other.rocketName == rocketName));
+                other.rocketName == rocketName) &&
+            (identical(other.rocket, rocket) || other.rocket == rocket));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, rocketName);
+  int get hashCode => Object.hash(runtimeType, rocketName, rocket);
 
   @JsonKey(ignore: true)
   @override
@@ -285,8 +463,8 @@ class _$RocketModelImpl implements _RocketModel {
 
 abstract class _RocketModel implements RocketModel {
   const factory _RocketModel(
-          {@JsonKey(name: 'rocket_name') final String? rocketName}) =
-      _$RocketModelImpl;
+      {@JsonKey(name: 'rocket_name') final String? rocketName,
+      final RocketBudgetModel? rocket}) = _$RocketModelImpl;
 
   factory _RocketModel.fromJson(Map<String, dynamic> json) =
       _$RocketModelImpl.fromJson;
@@ -294,6 +472,8 @@ abstract class _RocketModel implements RocketModel {
   @override
   @JsonKey(name: 'rocket_name')
   String? get rocketName;
+  @override
+  RocketBudgetModel? get rocket;
   @override
   @JsonKey(ignore: true)
   _$$RocketModelImplCopyWith<_$RocketModelImpl> get copyWith =>
@@ -493,254 +673,6 @@ abstract class _LinksModel implements LinksModel {
       throw _privateConstructorUsedError;
 }
 
-ShipModel _$ShipModelFromJson(Map<String, dynamic> json) {
-  return _ShipModel.fromJson(json);
-}
-
-/// @nodoc
-mixin _$ShipModel {
-  String? get abs => throw _privateConstructorUsedError;
-  bool get active => throw _privateConstructorUsedError;
-  @JsonKey(name: 'attempted_landings')
-  int? get attemptedLandings => throw _privateConstructorUsedError;
-  @JsonKey(name: 'successful_landings')
-  int? get successfulLandings => throw _privateConstructorUsedError;
-  String? get image => throw _privateConstructorUsedError;
-  String? get url => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ShipModelCopyWith<ShipModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ShipModelCopyWith<$Res> {
-  factory $ShipModelCopyWith(ShipModel value, $Res Function(ShipModel) then) =
-      _$ShipModelCopyWithImpl<$Res, ShipModel>;
-  @useResult
-  $Res call(
-      {String? abs,
-      bool active,
-      @JsonKey(name: 'attempted_landings') int? attemptedLandings,
-      @JsonKey(name: 'successful_landings') int? successfulLandings,
-      String? image,
-      String? url});
-}
-
-/// @nodoc
-class _$ShipModelCopyWithImpl<$Res, $Val extends ShipModel>
-    implements $ShipModelCopyWith<$Res> {
-  _$ShipModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? abs = freezed,
-    Object? active = null,
-    Object? attemptedLandings = freezed,
-    Object? successfulLandings = freezed,
-    Object? image = freezed,
-    Object? url = freezed,
-  }) {
-    return _then(_value.copyWith(
-      abs: freezed == abs
-          ? _value.abs
-          : abs // ignore: cast_nullable_to_non_nullable
-              as String?,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-      attemptedLandings: freezed == attemptedLandings
-          ? _value.attemptedLandings
-          : attemptedLandings // ignore: cast_nullable_to_non_nullable
-              as int?,
-      successfulLandings: freezed == successfulLandings
-          ? _value.successfulLandings
-          : successfulLandings // ignore: cast_nullable_to_non_nullable
-              as int?,
-      image: freezed == image
-          ? _value.image
-          : image // ignore: cast_nullable_to_non_nullable
-              as String?,
-      url: freezed == url
-          ? _value.url
-          : url // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$ShipModelImplCopyWith<$Res>
-    implements $ShipModelCopyWith<$Res> {
-  factory _$$ShipModelImplCopyWith(
-          _$ShipModelImpl value, $Res Function(_$ShipModelImpl) then) =
-      __$$ShipModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String? abs,
-      bool active,
-      @JsonKey(name: 'attempted_landings') int? attemptedLandings,
-      @JsonKey(name: 'successful_landings') int? successfulLandings,
-      String? image,
-      String? url});
-}
-
-/// @nodoc
-class __$$ShipModelImplCopyWithImpl<$Res>
-    extends _$ShipModelCopyWithImpl<$Res, _$ShipModelImpl>
-    implements _$$ShipModelImplCopyWith<$Res> {
-  __$$ShipModelImplCopyWithImpl(
-      _$ShipModelImpl _value, $Res Function(_$ShipModelImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? abs = freezed,
-    Object? active = null,
-    Object? attemptedLandings = freezed,
-    Object? successfulLandings = freezed,
-    Object? image = freezed,
-    Object? url = freezed,
-  }) {
-    return _then(_$ShipModelImpl(
-      abs: freezed == abs
-          ? _value.abs
-          : abs // ignore: cast_nullable_to_non_nullable
-              as String?,
-      active: null == active
-          ? _value.active
-          : active // ignore: cast_nullable_to_non_nullable
-              as bool,
-      attemptedLandings: freezed == attemptedLandings
-          ? _value.attemptedLandings
-          : attemptedLandings // ignore: cast_nullable_to_non_nullable
-              as int?,
-      successfulLandings: freezed == successfulLandings
-          ? _value.successfulLandings
-          : successfulLandings // ignore: cast_nullable_to_non_nullable
-              as int?,
-      image: freezed == image
-          ? _value.image
-          : image // ignore: cast_nullable_to_non_nullable
-              as String?,
-      url: freezed == url
-          ? _value.url
-          : url // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$ShipModelImpl implements _ShipModel {
-  const _$ShipModelImpl(
-      {this.abs,
-      required this.active,
-      @JsonKey(name: 'attempted_landings') this.attemptedLandings,
-      @JsonKey(name: 'successful_landings') this.successfulLandings,
-      this.image,
-      this.url});
-
-  factory _$ShipModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ShipModelImplFromJson(json);
-
-  @override
-  final String? abs;
-  @override
-  final bool active;
-  @override
-  @JsonKey(name: 'attempted_landings')
-  final int? attemptedLandings;
-  @override
-  @JsonKey(name: 'successful_landings')
-  final int? successfulLandings;
-  @override
-  final String? image;
-  @override
-  final String? url;
-
-  @override
-  String toString() {
-    return 'ShipModel(abs: $abs, active: $active, attemptedLandings: $attemptedLandings, successfulLandings: $successfulLandings, image: $image, url: $url)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ShipModelImpl &&
-            (identical(other.abs, abs) || other.abs == abs) &&
-            (identical(other.active, active) || other.active == active) &&
-            (identical(other.attemptedLandings, attemptedLandings) ||
-                other.attemptedLandings == attemptedLandings) &&
-            (identical(other.successfulLandings, successfulLandings) ||
-                other.successfulLandings == successfulLandings) &&
-            (identical(other.image, image) || other.image == image) &&
-            (identical(other.url, url) || other.url == url));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, abs, active, attemptedLandings,
-      successfulLandings, image, url);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ShipModelImplCopyWith<_$ShipModelImpl> get copyWith =>
-      __$$ShipModelImplCopyWithImpl<_$ShipModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ShipModelImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _ShipModel implements ShipModel {
-  const factory _ShipModel(
-      {final String? abs,
-      required final bool active,
-      @JsonKey(name: 'attempted_landings') final int? attemptedLandings,
-      @JsonKey(name: 'successful_landings') final int? successfulLandings,
-      final String? image,
-      final String? url}) = _$ShipModelImpl;
-
-  factory _ShipModel.fromJson(Map<String, dynamic> json) =
-      _$ShipModelImpl.fromJson;
-
-  @override
-  String? get abs;
-  @override
-  bool get active;
-  @override
-  @JsonKey(name: 'attempted_landings')
-  int? get attemptedLandings;
-  @override
-  @JsonKey(name: 'successful_landings')
-  int? get successfulLandings;
-  @override
-  String? get image;
-  @override
-  String? get url;
-  @override
-  @JsonKey(ignore: true)
-  _$$ShipModelImplCopyWith<_$ShipModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
 LaunchModel _$LaunchModelFromJson(Map<String, dynamic> json) {
   return _LaunchModel.fromJson(json);
 }
@@ -750,6 +682,7 @@ mixin _$LaunchModel {
   String get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'mission_name')
   String? get missionName => throw _privateConstructorUsedError;
+  String? get details => throw _privateConstructorUsedError;
   @JsonKey(name: 'launch_date_utc')
   String? get launchDateUtc => throw _privateConstructorUsedError;
   @JsonKey(name: 'launch_date_local')
@@ -766,7 +699,6 @@ mixin _$LaunchModel {
   String? get launchYear => throw _privateConstructorUsedError;
   @JsonKey(name: 'mission_id')
   List<String>? get missionIds => throw _privateConstructorUsedError;
-  List<ShipModel> get ships => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -783,6 +715,7 @@ abstract class $LaunchModelCopyWith<$Res> {
   $Res call(
       {String id,
       @JsonKey(name: 'mission_name') String? missionName,
+      String? details,
       @JsonKey(name: 'launch_date_utc') String? launchDateUtc,
       @JsonKey(name: 'launch_date_local') String? launchDateLocal,
       @JsonKey(name: 'launch_site') LaunchSiteModel? launchSite,
@@ -791,8 +724,7 @@ abstract class $LaunchModelCopyWith<$Res> {
       @JsonKey(name: 'is_tentative') bool? isTentative,
       @JsonKey(name: 'launch_success') bool? launchSuccess,
       @JsonKey(name: 'launch_year') String? launchYear,
-      @JsonKey(name: 'mission_id') List<String>? missionIds,
-      List<ShipModel> ships});
+      @JsonKey(name: 'mission_id') List<String>? missionIds});
 
   $LaunchSiteModelCopyWith<$Res>? get launchSite;
   $RocketModelCopyWith<$Res>? get rocket;
@@ -814,6 +746,7 @@ class _$LaunchModelCopyWithImpl<$Res, $Val extends LaunchModel>
   $Res call({
     Object? id = null,
     Object? missionName = freezed,
+    Object? details = freezed,
     Object? launchDateUtc = freezed,
     Object? launchDateLocal = freezed,
     Object? launchSite = freezed,
@@ -823,7 +756,6 @@ class _$LaunchModelCopyWithImpl<$Res, $Val extends LaunchModel>
     Object? launchSuccess = freezed,
     Object? launchYear = freezed,
     Object? missionIds = freezed,
-    Object? ships = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -833,6 +765,10 @@ class _$LaunchModelCopyWithImpl<$Res, $Val extends LaunchModel>
       missionName: freezed == missionName
           ? _value.missionName
           : missionName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      details: freezed == details
+          ? _value.details
+          : details // ignore: cast_nullable_to_non_nullable
               as String?,
       launchDateUtc: freezed == launchDateUtc
           ? _value.launchDateUtc
@@ -870,10 +806,6 @@ class _$LaunchModelCopyWithImpl<$Res, $Val extends LaunchModel>
           ? _value.missionIds
           : missionIds // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      ships: null == ships
-          ? _value.ships
-          : ships // ignore: cast_nullable_to_non_nullable
-              as List<ShipModel>,
     ) as $Val);
   }
 
@@ -925,6 +857,7 @@ abstract class _$$LaunchModelImplCopyWith<$Res>
   $Res call(
       {String id,
       @JsonKey(name: 'mission_name') String? missionName,
+      String? details,
       @JsonKey(name: 'launch_date_utc') String? launchDateUtc,
       @JsonKey(name: 'launch_date_local') String? launchDateLocal,
       @JsonKey(name: 'launch_site') LaunchSiteModel? launchSite,
@@ -933,8 +866,7 @@ abstract class _$$LaunchModelImplCopyWith<$Res>
       @JsonKey(name: 'is_tentative') bool? isTentative,
       @JsonKey(name: 'launch_success') bool? launchSuccess,
       @JsonKey(name: 'launch_year') String? launchYear,
-      @JsonKey(name: 'mission_id') List<String>? missionIds,
-      List<ShipModel> ships});
+      @JsonKey(name: 'mission_id') List<String>? missionIds});
 
   @override
   $LaunchSiteModelCopyWith<$Res>? get launchSite;
@@ -957,6 +889,7 @@ class __$$LaunchModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? missionName = freezed,
+    Object? details = freezed,
     Object? launchDateUtc = freezed,
     Object? launchDateLocal = freezed,
     Object? launchSite = freezed,
@@ -966,7 +899,6 @@ class __$$LaunchModelImplCopyWithImpl<$Res>
     Object? launchSuccess = freezed,
     Object? launchYear = freezed,
     Object? missionIds = freezed,
-    Object? ships = null,
   }) {
     return _then(_$LaunchModelImpl(
       id: null == id
@@ -976,6 +908,10 @@ class __$$LaunchModelImplCopyWithImpl<$Res>
       missionName: freezed == missionName
           ? _value.missionName
           : missionName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      details: freezed == details
+          ? _value.details
+          : details // ignore: cast_nullable_to_non_nullable
               as String?,
       launchDateUtc: freezed == launchDateUtc
           ? _value.launchDateUtc
@@ -1013,10 +949,6 @@ class __$$LaunchModelImplCopyWithImpl<$Res>
           ? _value._missionIds
           : missionIds // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      ships: null == ships
-          ? _value._ships
-          : ships // ignore: cast_nullable_to_non_nullable
-              as List<ShipModel>,
     ));
   }
 }
@@ -1027,6 +959,7 @@ class _$LaunchModelImpl extends _LaunchModel {
   const _$LaunchModelImpl(
       {required this.id,
       @JsonKey(name: 'mission_name') this.missionName,
+      this.details,
       @JsonKey(name: 'launch_date_utc') this.launchDateUtc,
       @JsonKey(name: 'launch_date_local') this.launchDateLocal,
       @JsonKey(name: 'launch_site') this.launchSite,
@@ -1035,10 +968,8 @@ class _$LaunchModelImpl extends _LaunchModel {
       @JsonKey(name: 'is_tentative') this.isTentative,
       @JsonKey(name: 'launch_success') this.launchSuccess,
       @JsonKey(name: 'launch_year') this.launchYear,
-      @JsonKey(name: 'mission_id') final List<String>? missionIds = const [],
-      final List<ShipModel> ships = const []})
+      @JsonKey(name: 'mission_id') final List<String>? missionIds = const []})
       : _missionIds = missionIds,
-        _ships = ships,
         super._();
 
   factory _$LaunchModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -1049,6 +980,8 @@ class _$LaunchModelImpl extends _LaunchModel {
   @override
   @JsonKey(name: 'mission_name')
   final String? missionName;
+  @override
+  final String? details;
   @override
   @JsonKey(name: 'launch_date_utc')
   final String? launchDateUtc;
@@ -1082,18 +1015,9 @@ class _$LaunchModelImpl extends _LaunchModel {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<ShipModel> _ships;
-  @override
-  @JsonKey()
-  List<ShipModel> get ships {
-    if (_ships is EqualUnmodifiableListView) return _ships;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_ships);
-  }
-
   @override
   String toString() {
-    return 'LaunchModel(id: $id, missionName: $missionName, launchDateUtc: $launchDateUtc, launchDateLocal: $launchDateLocal, launchSite: $launchSite, rocket: $rocket, links: $links, isTentative: $isTentative, launchSuccess: $launchSuccess, launchYear: $launchYear, missionIds: $missionIds, ships: $ships)';
+    return 'LaunchModel(id: $id, missionName: $missionName, details: $details, launchDateUtc: $launchDateUtc, launchDateLocal: $launchDateLocal, launchSite: $launchSite, rocket: $rocket, links: $links, isTentative: $isTentative, launchSuccess: $launchSuccess, launchYear: $launchYear, missionIds: $missionIds)';
   }
 
   @override
@@ -1104,6 +1028,7 @@ class _$LaunchModelImpl extends _LaunchModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.missionName, missionName) ||
                 other.missionName == missionName) &&
+            (identical(other.details, details) || other.details == details) &&
             (identical(other.launchDateUtc, launchDateUtc) ||
                 other.launchDateUtc == launchDateUtc) &&
             (identical(other.launchDateLocal, launchDateLocal) ||
@@ -1119,8 +1044,7 @@ class _$LaunchModelImpl extends _LaunchModel {
             (identical(other.launchYear, launchYear) ||
                 other.launchYear == launchYear) &&
             const DeepCollectionEquality()
-                .equals(other._missionIds, _missionIds) &&
-            const DeepCollectionEquality().equals(other._ships, _ships));
+                .equals(other._missionIds, _missionIds));
   }
 
   @JsonKey(ignore: true)
@@ -1129,6 +1053,7 @@ class _$LaunchModelImpl extends _LaunchModel {
       runtimeType,
       id,
       missionName,
+      details,
       launchDateUtc,
       launchDateLocal,
       launchSite,
@@ -1137,8 +1062,7 @@ class _$LaunchModelImpl extends _LaunchModel {
       isTentative,
       launchSuccess,
       launchYear,
-      const DeepCollectionEquality().hash(_missionIds),
-      const DeepCollectionEquality().hash(_ships));
+      const DeepCollectionEquality().hash(_missionIds));
 
   @JsonKey(ignore: true)
   @override
@@ -1156,18 +1080,19 @@ class _$LaunchModelImpl extends _LaunchModel {
 
 abstract class _LaunchModel extends LaunchModel {
   const factory _LaunchModel(
-      {required final String id,
-      @JsonKey(name: 'mission_name') final String? missionName,
-      @JsonKey(name: 'launch_date_utc') final String? launchDateUtc,
-      @JsonKey(name: 'launch_date_local') final String? launchDateLocal,
-      @JsonKey(name: 'launch_site') final LaunchSiteModel? launchSite,
-      final RocketModel? rocket,
-      final LinksModel? links,
-      @JsonKey(name: 'is_tentative') final bool? isTentative,
-      @JsonKey(name: 'launch_success') final bool? launchSuccess,
-      @JsonKey(name: 'launch_year') final String? launchYear,
-      @JsonKey(name: 'mission_id') final List<String>? missionIds,
-      final List<ShipModel> ships}) = _$LaunchModelImpl;
+          {required final String id,
+          @JsonKey(name: 'mission_name') final String? missionName,
+          final String? details,
+          @JsonKey(name: 'launch_date_utc') final String? launchDateUtc,
+          @JsonKey(name: 'launch_date_local') final String? launchDateLocal,
+          @JsonKey(name: 'launch_site') final LaunchSiteModel? launchSite,
+          final RocketModel? rocket,
+          final LinksModel? links,
+          @JsonKey(name: 'is_tentative') final bool? isTentative,
+          @JsonKey(name: 'launch_success') final bool? launchSuccess,
+          @JsonKey(name: 'launch_year') final String? launchYear,
+          @JsonKey(name: 'mission_id') final List<String>? missionIds}) =
+      _$LaunchModelImpl;
   const _LaunchModel._() : super._();
 
   factory _LaunchModel.fromJson(Map<String, dynamic> json) =
@@ -1178,6 +1103,8 @@ abstract class _LaunchModel extends LaunchModel {
   @override
   @JsonKey(name: 'mission_name')
   String? get missionName;
+  @override
+  String? get details;
   @override
   @JsonKey(name: 'launch_date_utc')
   String? get launchDateUtc;
@@ -1203,8 +1130,6 @@ abstract class _LaunchModel extends LaunchModel {
   @override
   @JsonKey(name: 'mission_id')
   List<String>? get missionIds;
-  @override
-  List<ShipModel> get ships;
   @override
   @JsonKey(ignore: true)
   _$$LaunchModelImplCopyWith<_$LaunchModelImpl> get copyWith =>
