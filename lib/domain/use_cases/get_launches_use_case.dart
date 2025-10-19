@@ -10,10 +10,10 @@ import 'package:spacex_flutter_app/domain/repositories/i_launch_repository.dart'
 // that implements the LaunchRepository interface. For simplicity, we implement
 // the logic here and use the generic GraphQLRepositoryImpl for execution.
 
-class GetPastLaunchesUseCase implements ILaunchRepository {
+class GetLaunchesUseCase implements ILaunchRepository {
   final GraphQLRepositoryImpl repository;
 
-  GetPastLaunchesUseCase(this.repository);
+  GetLaunchesUseCase(this.repository);
 
   @override
   Future<List<LaunchEntity>> getPastLaunches({
@@ -25,23 +25,52 @@ class GetPastLaunchesUseCase implements ILaunchRepository {
       'offset': offset,
     };
 
-    final rawDataList = await repository.executeQuery(
+    final rawDataList = await repository.executeListQuery(
       query: getPastLaunchesQuery,
       queryName: 'launchesPast',
       variables: variables,
     );
-
-    print("Raw Data List: $rawDataList");
 
     // This is where the mapping happens: from raw API data (Map) to Domain Entity.
     return rawDataList
         .map((rawMap) => LaunchModel.fromJson(rawMap).toEntity())
         .toList();
   }
+  
+  @override
+  Future<List<LaunchEntity>> getUpComingLaunches({required int limit, required int offset}) async {
+    final variables = {
+      'limit': limit,
+      'offset': offset,
+    };
 
-  // @override
-  // Future<LaunchEntity> getLaunchDetails(String id) {
-  //   // TODO: implement getLaunchDetails
-  //   throw UnimplementedError();
-  // }
+    final rawDataList = await repository.executeListQuery(
+      query: getUpComingLaunchesQuery,
+      queryName: 'launchesUpcoming',
+      variables: variables,
+    );
+
+    // This is where the mapping happens: from raw API data (Map) to Domain Entity.
+    return rawDataList
+        .map((rawMap) => LaunchModel.fromJson(rawMap).toEntity())
+        .toList();
+  }
+  
+
+  @override
+  Future<LaunchEntity> getLaunchDetails(String id) async {
+    final variables = {
+      'id': id,
+    };
+
+    final rawData = await repository.executeSingleQuery(
+      query: getLaunchDetailsQuery,
+      queryName: 'launch',
+      variables: variables,
+    );
+
+    // This is where the mapping happens: from raw API data (Map) to Domain Entity.
+    return LaunchModel.fromJson(rawData).toEntity();
+  }
+  
 }

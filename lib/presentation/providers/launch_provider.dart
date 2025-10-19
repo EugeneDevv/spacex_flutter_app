@@ -1,88 +1,142 @@
 import 'package:flutter/foundation.dart';
 import 'package:spacex_flutter_app/domain/entities/launch_entity.dart';
-import 'package:spacex_flutter_app/domain/use_cases/get_past_launches_use_case.dart';
+import 'package:spacex_flutter_app/domain/use_cases/get_launches_use_case.dart';
 
-// TODO: Implement LaunchProvider
-// This is a placeholder for the launch state management
-// You need to implement:
-// 1. Launch data models
-// 2. GraphQL queries for launches
-// 3. Repository pattern for data fetching
-// 4. State management for launches list, loading, error states
+enum LaunchType { past, upcoming }
 
 class LaunchProvider extends ChangeNotifier {
-  // Dependency: The Use Case is injected via the constructor
-  final GetPastLaunchesUseCase _getPastLaunchesUseCase;
+  // Dependencies: Use Cases are injected via the constructor
+  final GetLaunchesUseCase getLaunchesUseCase;
 
-  LaunchProvider(this._getPastLaunchesUseCase) {
-    // Automatically start loading data when the Notifier is created
+  LaunchProvider(this.getLaunchesUseCase) {
+    // Automatically start loading both lists when the Notifier is created
     fetchPastLaunches(isInitial: true);
+    fetchUpcomingLaunches(isInitial: true);
   }
 
-  // --- State Variables ---
-  List<LaunchEntity> _launches = [];
-  bool _isLoadingInitial = false;
-  bool _isFetchingMore = false;
-  bool _hasMoreData = true;
-  String? _errorMessage;
-
-  // --- Getters for UI access ---
-  List<LaunchEntity> get launches => _launches;
-  bool get isLoadingInitial => _isLoadingInitial;
-  bool get isFetchingMore => _isFetchingMore;
-  bool get hasMoreData => _hasMoreData;
-  String? get errorMessage => _errorMessage;
-
-  // --- Pagination State ---
+  // --- Common Pagination State ---
   static const int _pageSize = 20;
-  int _offset = 0;
 
-  /// Resets state and calls the Use Case to fetch data, managing pagination.
+  // --- PAST LAUNCH STATE ---
+  List<LaunchEntity> _pastLaunches = [];
+  bool _isPastLoadingInitial = false;
+  bool _isPastFetchingMore = false;
+  bool _pastHasMoreData = true;
+  String? _pastErrorMessage;
+  int _pastOffset = 0;
+
+  List<LaunchEntity> get pastLaunches => _pastLaunches;
+  bool get isPastLoadingInitial => _isPastLoadingInitial;
+  bool get isPastFetchingMore => _isPastFetchingMore;
+  bool get pastHasMoreData => _pastHasMoreData;
+  String? get pastErrorMessage => _pastErrorMessage;
+
+  // --- UPCOMING LAUNCH STATE ---
+  List<LaunchEntity> _upcomingLaunches = [];
+  bool _isUpcomingLoadingInitial = false;
+  bool _isUpcomingFetchingMore = false;
+  bool _upcomingHasMoreData = true;
+  String? _upcomingErrorMessage;
+  int _upcomingOffset = 0;
+
+  List<LaunchEntity> get upcomingLaunches => _upcomingLaunches;
+  bool get isUpcomingLoadingInitial => _isUpcomingLoadingInitial;
+  bool get isUpcomingFetchingMore => _isUpcomingFetchingMore;
+  bool get upcomingHasMoreData => _upcomingHasMoreData;
+  String? get upcomingErrorMessage => _upcomingErrorMessage;
+
+  // --- PAST LAUNCH METHODS ---
+
   Future<void> fetchPastLaunches({bool isInitial = false}) async {
-    if (!isInitial && (_isFetchingMore || !_hasMoreData)) return;
+    if (!isInitial && (_isPastFetchingMore || !_pastHasMoreData)) return;
 
     if (isInitial) {
-      _isLoadingInitial = true;
-      _offset = 0;
-      _launches = [];
-      _hasMoreData = true;
-      _errorMessage = null;
+      _isPastLoadingInitial = true;
+      _pastOffset = 0;
+      _pastLaunches = [];
+      _pastHasMoreData = true;
+      _pastErrorMessage = null;
     } else {
-      _isFetchingMore = true;
+      _isPastFetchingMore = true;
     }
     notifyListeners();
 
     try {
-      // 2. USE CASE EXECUTION: The notifier calls the Use Case.
-      // The Use Case handles the repository call and Model-to-Entity mapping.
-      final newLaunches = await _getPastLaunchesUseCase.getPastLaunches(
+      final newLaunches = await getLaunchesUseCase.getPastLaunches(
         limit: _pageSize,
-        offset: _offset,
+        offset: _pastOffset,
       );
 
       if (newLaunches.isEmpty) {
-        _hasMoreData = false;
+        _pastHasMoreData = false;
       } else {
-        _launches.addAll(newLaunches);
-        _offset += _pageSize;
-        _hasMoreData = newLaunches.length == _pageSize;
+        _pastLaunches.addAll(newLaunches);
+        _pastOffset += _pageSize;
+        _pastHasMoreData = newLaunches.length == _pageSize;
       }
     } catch (e) {
-      if (kDebugMode) print('Notifier Error: $e');
-      _errorMessage = 'Failed to load launches: Check network connection.';
-      _hasMoreData = false;
+      if (kDebugMode) print('Past Launches Notifier Error: $e');
+      _pastErrorMessage =
+          'Failed to load past launches: Check network connection.';
+      _pastHasMoreData = false;
     } finally {
-      _isLoadingInitial = false;
-      _isFetchingMore = false;
+      _isPastLoadingInitial = false;
+      _isPastFetchingMore = false;
+      notifyListeners();
+    }
+  }
+
+  // --- UPCOMING LAUNCH METHODS ---
+
+  Future<void> fetchUpcomingLaunches({bool isInitial = false}) async {
+    if (!isInitial && (_isUpcomingFetchingMore || !_upcomingHasMoreData))
+      return;
+
+    if (isInitial) {
+      _isUpcomingLoadingInitial = true;
+      _upcomingOffset = 0;
+      _upcomingLaunches = [];
+      _upcomingHasMoreData = true;
+      _upcomingErrorMessage = null;
+    } else {
+      _isUpcomingFetchingMore = true;
+    }
+    notifyListeners();
+
+    try {
+      final newLaunches = await getLaunchesUseCase.getUpComingLaunches(
+        limit: _pageSize,
+        offset: _upcomingOffset,
+      );
+
+      if (newLaunches.isEmpty) {
+        _upcomingHasMoreData = false;
+      } else {
+        _upcomingLaunches.addAll(newLaunches);
+        _upcomingOffset += _pageSize;
+        _upcomingHasMoreData = newLaunches.length == _pageSize;
+      }
+    } catch (e) {
+      if (kDebugMode) print('Upcoming Launches Notifier Error: $e');
+      _upcomingErrorMessage =
+          'Failed to load upcoming launches: Check network connection.';
+      _upcomingHasMoreData = false;
+    } finally {
+      _isUpcomingLoadingInitial = false;
+      _isUpcomingFetchingMore = false;
       notifyListeners();
     }
   }
 
   void clearLaunches() {
-    _launches = [];
-    _offset = 0;
-    _hasMoreData = true;
-    _errorMessage = null;
+    _pastLaunches = [];
+    _upcomingLaunches = [];
+    _pastOffset = 0;
+    _upcomingOffset = 0;
+    _pastHasMoreData = true;
+    _upcomingHasMoreData = true;
+    _pastErrorMessage = null;
+    _upcomingErrorMessage = null;
     notifyListeners();
   }
 }

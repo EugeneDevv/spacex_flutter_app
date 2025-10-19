@@ -12,6 +12,9 @@ const String getPastLaunchesQuery = r'''
       }
       rocket {
         rocket_name
+        rocket {
+          cost_per_launch
+        }
       }
       links {
         mission_patch_small
@@ -24,6 +27,35 @@ const String getPastLaunchesQuery = r'''
       mission_id
     }
   }
+''';
+
+const String getUpComingLaunchesQuery = r'''
+query LaunchesUpcoming($limit: Int, $offset: Int, $order: String, $sort: String, $find: LaunchFind) {
+  launchesUpcoming(limit: $limit, offset: $offset, order: $order, sort: $sort, find: $find) {
+    id
+      mission_name
+      launch_date_utc
+      launch_date_local
+      launch_site {
+        site_name_long
+      }
+      rocket {
+        rocket_name
+        rocket {
+          cost_per_launch
+        }
+      }
+      links {
+        mission_patch_small
+        article_link
+        video_link
+      }
+      is_tentative
+      launch_success
+      launch_year
+      mission_id
+    }
+}
 ''';
 
 /// GraphQL query to fetch detailed information for a specific launch by its ID.

@@ -3,6 +3,7 @@
 class LaunchEntity {
   final String id;
   final String missionName;
+  final String? details;
   final bool? launchSuccess;
 
   // Date and Tentative Status
@@ -12,6 +13,7 @@ class LaunchEntity {
 
   // Related Names
   final String launchSiteName;
+  final String? launchCost;
   final String rocketName;
 
   // Links
@@ -19,21 +21,18 @@ class LaunchEntity {
   final String? articleLink;
   final String? videoLink;
 
-  // Derived Data (extracted from the ships list in the Model)
-  final int shipCount;
-
-  const LaunchEntity({
-    required this.id,
-    required this.missionName,
-    this.launchSuccess,
-    this.launchDateUtc,
-    required this.launchYear,
-    required this.isTentative,
-    required this.launchSiteName,
-    required this.rocketName,
-    this.missionPatchUrl,
-    this.articleLink,
-    this.videoLink,
-    required this.shipCount,
-  });
+  const LaunchEntity(
+      {required this.id,
+      required this.missionName,
+      this.details,
+      this.launchSuccess,
+      this.launchDateUtc,
+      required this.launchYear,
+      required this.isTentative,
+      this.launchCost,
+      required this.launchSiteName,
+      required this.rocketName,
+      this.missionPatchUrl,
+      this.articleLink,
+      this.videoLink});
 }

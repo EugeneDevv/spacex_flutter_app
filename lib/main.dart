@@ -7,7 +7,7 @@ import 'package:sizer/sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacex_flutter_app/core/network/graphql_client.dart';
 import 'package:spacex_flutter_app/data/repositories/graphql_repository_impl.dart';
-import 'package:spacex_flutter_app/domain/use_cases/get_past_launches_use_case.dart';
+import 'package:spacex_flutter_app/domain/use_cases/get_launches_use_case.dart';
 import 'package:spacex_flutter_app/presentation/providers/launch_provider.dart';
 import 'package:spacex_flutter_app/presentation/screens/home_screen.dart';
 
@@ -85,17 +85,17 @@ class _SpaceXAppState extends State<SpaceXApp> {
         ),
 
         // --- Domain Layer: Provide the Use Case (depends on Repository) ---
-        ProxyProvider<GraphQLRepositoryImpl, GetPastLaunchesUseCase>(
+        ProxyProvider<GraphQLRepositoryImpl, GetLaunchesUseCase>(
           // The Use Case takes the Repository as an argument
           update: (context, repository, previous) =>
-              GetPastLaunchesUseCase(repository),
+              GetLaunchesUseCase(repository),
         ),
 
         // --- Presentation Layer: Provide the Notifier (depends on Use Case) ---
-        ChangeNotifierProxyProvider<GetPastLaunchesUseCase, LaunchProvider>(
+        ChangeNotifierProxyProvider<GetLaunchesUseCase, LaunchProvider>(
           // 'create' initializes the notifier by fetching the Use Case from context
           create: (context) => LaunchProvider(
-            Provider.of<GetPastLaunchesUseCase>(context, listen: false),
+            Provider.of<GetLaunchesUseCase>(context, listen: false),
           ),
           // 'update' ensures the Notifier is reused even if the Use Case changes (it shouldn't here)
           update: (context, useCase, previous) =>

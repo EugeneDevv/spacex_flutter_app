@@ -5,6 +5,11 @@ abstract class ILaunchRepository {
     required int limit,
     required int offset,
   });
+
+    Future<List<LaunchEntity>> getUpComingLaunches({
+    required int limit,
+    required int offset,
+  });
   
-  // Future<LaunchEntity> getLaunchDetails(String id); // Future implementation
+  Future<LaunchEntity> getLaunchDetails(String id);
 }

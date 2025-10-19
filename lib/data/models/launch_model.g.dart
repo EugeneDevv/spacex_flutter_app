@@ -18,14 +18,30 @@ Map<String, dynamic> _$$LaunchSiteModelImplToJson(
       'site_name_long': instance.siteNameLong,
     };
 
+_$RocketBudgetModelImpl _$$RocketBudgetModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$RocketBudgetModelImpl(
+      cost: (json['cost_per_launch'] as num?)?.toDouble(),
+    );
+
+Map<String, dynamic> _$$RocketBudgetModelImplToJson(
+        _$RocketBudgetModelImpl instance) =>
+    <String, dynamic>{
+      'cost_per_launch': instance.cost,
+    };
+
 _$RocketModelImpl _$$RocketModelImplFromJson(Map<String, dynamic> json) =>
     _$RocketModelImpl(
       rocketName: json['rocket_name'] as String?,
+      rocket: json['rocket'] == null
+          ? null
+          : RocketBudgetModel.fromJson(json['rocket'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$RocketModelImplToJson(_$RocketModelImpl instance) =>
     <String, dynamic>{
       'rocket_name': instance.rocketName,
+      'rocket': instance.rocket,
     };
 
 _$LinksModelImpl _$$LinksModelImplFromJson(Map<String, dynamic> json) =>
@@ -42,30 +58,11 @@ Map<String, dynamic> _$$LinksModelImplToJson(_$LinksModelImpl instance) =>
       'video_link': instance.videoLink,
     };
 
-_$ShipModelImpl _$$ShipModelImplFromJson(Map<String, dynamic> json) =>
-    _$ShipModelImpl(
-      abs: json['abs'] as String?,
-      active: json['active'] as bool,
-      attemptedLandings: (json['attempted_landings'] as num?)?.toInt(),
-      successfulLandings: (json['successful_landings'] as num?)?.toInt(),
-      image: json['image'] as String?,
-      url: json['url'] as String?,
-    );
-
-Map<String, dynamic> _$$ShipModelImplToJson(_$ShipModelImpl instance) =>
-    <String, dynamic>{
-      'abs': instance.abs,
-      'active': instance.active,
-      'attempted_landings': instance.attemptedLandings,
-      'successful_landings': instance.successfulLandings,
-      'image': instance.image,
-      'url': instance.url,
-    };
-
 _$LaunchModelImpl _$$LaunchModelImplFromJson(Map<String, dynamic> json) =>
     _$LaunchModelImpl(
       id: json['id'] as String,
       missionName: json['mission_name'] as String?,
+      details: json['details'] as String?,
       launchDateUtc: json['launch_date_utc'] as String?,
       launchDateLocal: json['launch_date_local'] as String?,
       launchSite: json['launch_site'] == null
@@ -85,16 +82,13 @@ _$LaunchModelImpl _$$LaunchModelImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      ships: (json['ships'] as List<dynamic>?)
-              ?.map((e) => ShipModel.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
     );
 
 Map<String, dynamic> _$$LaunchModelImplToJson(_$LaunchModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'mission_name': instance.missionName,
+      'details': instance.details,
       'launch_date_utc': instance.launchDateUtc,
       'launch_date_local': instance.launchDateLocal,
       'launch_site': instance.launchSite,
@@ -104,5 +98,4 @@ Map<String, dynamic> _$$LaunchModelImplToJson(_$LaunchModelImpl instance) =>
       'launch_success': instance.launchSuccess,
       'launch_year': instance.launchYear,
       'mission_id': instance.missionIds,
-      'ships': instance.ships,
     };
