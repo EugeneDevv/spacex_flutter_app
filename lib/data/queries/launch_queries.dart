@@ -1,6 +1,6 @@
 /// GraphQL query to fetch a list of all past launches.
 /// It retrieves key summary data points for display in a list.
-const String getPastLaunches = r'''
+const String getPastLaunchesQuery = r'''
   query GetPastLaunches($offset: Int, $limit: Int, $find: LaunchFind, $order: String, $sort: String) {
     launchesPast(offset: $offset, limit: $limit, find: $find, order: $order, sort: $sort) {
       id
@@ -22,23 +22,12 @@ const String getPastLaunches = r'''
       launch_success
       launch_year
       mission_id
-      ships {
-        abs
-        active
-        attempted_landings
-        course_deg
-        home_port
-        image
-        successful_landings
-        url
-        weight_kg
-      }
     }
   }
 ''';
 
 /// GraphQL query to fetch detailed information for a specific launch by its ID.
-const String getLaunchDetails = r'''
+const String getLaunchDetailsQuery = r'''
 query GetLaunchDetails($id: ID!) {
     launch(id: $id) {
       id

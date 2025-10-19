@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spacex_flutter_app/core/network/graphql_client.dart';
+import 'package:spacex_flutter_app/data/repositories/graphql_repository_impl.dart';
+import 'package:spacex_flutter_app/domain/use_cases/get_past_launches_use_case.dart';
+import 'package:spacex_flutter_app/presentation/providers/launch_provider.dart';
 import 'package:spacex_flutter_app/presentation/screens/home_screen.dart';
 
 import 'core/utils/theme.dart';
@@ -18,7 +23,14 @@ void main() async {
   // Initialize SharedPreferences
   await SharedPreferences.getInstance();
 
-  runApp(const SpaceXApp());
+  // Wrap the entire app with GraphQLProvider to expose the client
+  runApp(
+    GraphQLProvider(
+      // Use the static client notifier from the service layer
+      client: GraphQLService.clientNotifier,
+      child: const SpaceXApp(),
+    ),
+  );
 }
 
 class SpaceXApp extends StatefulWidget {
@@ -63,12 +75,35 @@ class _SpaceXAppState extends State<SpaceXApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // --- UI/Theming/Localization Providers  ---
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => _languageProvider),
-        // TODO: Add other providers as you implement them
-        // ChangeNotifierProvider(create: (_) => MissionProvider()),
-        // ChangeNotifierProvider(create: (_) => RocketProvider()),
-        // ChangeNotifierProvider(create: (_) => LaunchProvider()),
+
+        // --- Data Layer: Provide the Repository Implementation ---
+        Provider<GraphQLRepositoryImpl>(
+          create: (_) => GraphQLRepositoryImpl(),
+        ),
+
+        // --- Domain Layer: Provide the Use Case (depends on Repository) ---
+        ProxyProvider<GraphQLRepositoryImpl, GetPastLaunchesUseCase>(
+          // The Use Case takes the Repository as an argument
+          update: (context, repository, previous) =>
+              GetPastLaunchesUseCase(repository),
+        ),
+
+        // --- Presentation Layer: Provide the Notifier (depends on Use Case) ---
+        ChangeNotifierProxyProvider<GetPastLaunchesUseCase, LaunchProvider>(
+          // 'create' initializes the notifier by fetching the Use Case from context
+          create: (context) => LaunchProvider(
+            Provider.of<GetPastLaunchesUseCase>(context, listen: false),
+          ),
+          // 'update' ensures the Notifier is reused even if the Use Case changes (it shouldn't here)
+          update: (context, useCase, previous) =>
+              previous ?? LaunchProvider(useCase),
+        ),
+
+        // TODO: Add other notifiers (MissionNotifier, RocketNotifier, etc.)
+        // using the same ProxyProvider pattern to inject their respective Use Cases.
       ],
       child: Consumer2<ThemeProvider, LanguageProvider>(
         builder: (context, themeProvider, languageProvider, child) {
