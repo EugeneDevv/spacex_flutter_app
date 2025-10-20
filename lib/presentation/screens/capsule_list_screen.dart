@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spacex_flutter_app/core/utils/colors.dart';
-import 'package:spacex_flutter_app/presentation/providers/rocket_provider.dart';
+import 'package:spacex_flutter_app/presentation/providers/capsule_provider.dart';
+import 'package:spacex_flutter_app/presentation/views/capsule_grid_view.dart';
+import 'package:spacex_flutter_app/presentation/views/capsule_list_view.dart';
 import 'package:spacex_flutter_app/presentation/widgets/custom_app_bar_widget.dart';
 
-class RocketListScreen extends StatefulWidget {
-  const RocketListScreen({super.key});
+class CapsulesListScreen extends StatefulWidget {
+  const CapsulesListScreen({super.key});
 
   @override
-  State<RocketListScreen> createState() => _RocketListScreenState();
+  State<CapsulesListScreen> createState() => _CapsulesListScreenState();
 }
 
-class _RocketListScreenState extends State<RocketListScreen> {
+class _CapsulesListScreenState extends State<CapsulesListScreen> {
+  bool showGridView = true;
+
   // Controller to detect when the user scrolls near the bottom for pagination
   final ScrollController _scrollController = ScrollController();
 
@@ -22,9 +26,9 @@ class _RocketListScreenState extends State<RocketListScreen> {
     _scrollController.addListener(_onScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Fetch initial rockets data when the widget is first built
-      Provider.of<RocketProvider>(context, listen: false)
-          .fetchRockets(isInitial: true);
+      // Fetch initial capsules data when the widget is first built
+      Provider.of<CapsuleProvider>(context, listen: false)
+          .fetchCapsules(isInitial: true);
     });
   }
 
@@ -37,7 +41,7 @@ class _RocketListScreenState extends State<RocketListScreen> {
 
   /// Checks scroll position and requests more data if near the bottom.
   void _onScroll() {
-    final notifier = Provider.of<RocketProvider>(context, listen: false);
+    final notifier = Provider.of<CapsuleProvider>(context, listen: false);
 
     // Check if scroll position is within 100 pixels of the end
     if (_scrollController.position.pixels >=
@@ -45,7 +49,7 @@ class _RocketListScreenState extends State<RocketListScreen> {
         !notifier.isFetchingMore && // Prevent multiple requests
         notifier.hasMoreData) {
       // Only fetch if we expect more data
-      notifier.fetchRockets();
+      notifier.fetchCapsules();
     }
   }
 
@@ -53,7 +57,7 @@ class _RocketListScreenState extends State<RocketListScreen> {
   Widget build(BuildContext context) {
     // --- UI Building Logic based on Notifier State ---
 
-    Widget buildBody(RocketProvider notifier) {
+    Widget buildBody(CapsuleProvider notifier) {
       // 1. Initial Loading State (Loader)
       if (notifier.isLoadingInitial) {
         return const Center(child: CircularProgressIndicator());
@@ -77,7 +81,7 @@ class _RocketListScreenState extends State<RocketListScreen> {
                 const SizedBox(height: 16),
                 // Button to retry fetching
                 ElevatedButton.icon(
-                  onPressed: () => notifier.fetchRockets(isInitial: true),
+                  onPressed: () => notifier.fetchCapsules(isInitial: true),
                   icon: const Icon(Icons.refresh),
                   label: const Text('Try Again'),
                 ),
@@ -88,7 +92,7 @@ class _RocketListScreenState extends State<RocketListScreen> {
       }
 
       // 3. Empty State (No Data)
-      if (notifier.rockets.isEmpty) {
+      if (notifier.capsules.isEmpty) {
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -97,7 +101,7 @@ class _RocketListScreenState extends State<RocketListScreen> {
                   size: 64, color: Colors.grey),
               const SizedBox(height: 16),
               Text(
-                'No rockets found.',
+                'No capsules found.',
                 style: TextStyle(fontSize: 18, color: Colors.grey[700]),
               ),
             ],
@@ -106,72 +110,39 @@ class _RocketListScreenState extends State<RocketListScreen> {
       }
 
       // 4. Data List View with Pagination Footer
-      return ListView.builder(
-        controller: _scrollController,
-        // Add 1 to the item count to reserve space for the pagination footer/indicator
-        itemCount: notifier.rockets.length + 1,
-        itemBuilder: (context, index) {
-          if (index == notifier.rockets.length) {
-            // This is the pagination footer/load more indicator
-            if (notifier.isFetchingMore) {
-              return const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-              );
-            } else if (!notifier.hasMoreData) {
-              // End of results message
-              return const Padding(
-                padding: EdgeInsets.all(24.0),
-                child: Center(
-                  child: Text(
-                    'End of the Rocket History.',
-                    style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        color: AppColors.lightGrey),
-                  ),
-                ),
-              );
-            }
-            // Default empty space if we still have more data but haven't triggered a fetch yet
-            return const SizedBox(height: 24);
-          }
-
-          final rocket = notifier.rockets[index];
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(12.0),
-              border: Border.all(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  rocket.type ?? 'Unknown Type',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface),
-                ),
-                const SizedBox(height: 8),
-              ],
-            ),
-          );
-        },
-      );
+      return showGridView
+          ? CapsuleGridView(
+              capsules: notifier.capsules,
+              scrollController: _scrollController,
+              isFetchingMore: notifier.isFetchingMore,
+              hasMoreData: notifier.hasMoreData,
+            )
+          : CapsuleListView(
+              capsules: notifier.capsules,
+              scrollController: _scrollController,
+              isFetchingMore: notifier.isFetchingMore,
+              hasMoreData: notifier.hasMoreData,
+            );
     }
 
-    return Consumer<RocketProvider>(
+    return Consumer<CapsuleProvider>(
       builder: (context, notifier, child) {
         // Wrap the body in a RefreshIndicator for pull-to-refresh
         return Scaffold(
-          appBar: const CustomAppBar(showBackButton: false, title: 'Rockets'),
+          appBar: CustomAppBar(
+              leadingWidget: IconButton(
+                  onPressed: () => setState(() {
+                        showGridView = !showGridView;
+                      }),
+                  icon: Icon(
+                    showGridView ? Icons.list : Icons.grid_view,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  )),
+              showBackButton: false,
+              title: 'Capsules'),
           body: RefreshIndicator(
             // When pulled, reset state and fetch the first page
-            onRefresh: () => notifier.fetchRockets(isInitial: true),
+            onRefresh: () => notifier.fetchCapsules(isInitial: true),
             child: buildBody(notifier),
           ),
         );

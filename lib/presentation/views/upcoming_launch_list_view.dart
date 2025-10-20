@@ -43,6 +43,7 @@ class _UpcomingLaunchListViewState extends State<UpcomingLaunchListView>{
       notifier.fetchUpcomingLaunches();
     }
   }
+  
   @override
   Widget build(BuildContext context) {
 
