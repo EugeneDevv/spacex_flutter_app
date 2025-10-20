@@ -7,15 +7,19 @@ import 'package:sizer/sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacex_flutter_app/core/network/graphql_client.dart';
 import 'package:spacex_flutter_app/data/repositories/graphql_repository_impl.dart';
+import 'package:spacex_flutter_app/domain/use_cases/get_capsules_use_case.dart';
 import 'package:spacex_flutter_app/domain/use_cases/get_launches_use_case.dart';
+import 'package:spacex_flutter_app/domain/use_cases/get_rockets_use_case.dart';
+import 'package:spacex_flutter_app/presentation/providers/capsule_provider.dart';
 import 'package:spacex_flutter_app/presentation/providers/launch_provider.dart';
-import 'package:spacex_flutter_app/presentation/screens/home_screen.dart';
+import 'package:spacex_flutter_app/presentation/providers/rocket_provider.dart';
+import 'package:spacex_flutter_app/presentation/router/app_pages.dart';
+import 'package:spacex_flutter_app/presentation/router/routes.dart';
 
 import 'core/utils/theme.dart';
 import 'core/utils/localization/spacex_localization.dart';
 import 'presentation/providers/theme_provider.dart';
 import 'presentation/providers/language_provider.dart';
-import 'presentation/screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -90,6 +94,18 @@ class _SpaceXAppState extends State<SpaceXApp> {
           update: (context, repository, previous) =>
               GetLaunchesUseCase(repository),
         ),
+        // --- Domain Layer: Provide the Use Case (depends on Repository) ---
+        ProxyProvider<GraphQLRepositoryImpl, GetRocketsUseCase>(
+          // The Use Case takes the Repository as an argument
+          update: (context, repository, previous) =>
+              GetRocketsUseCase(repository),
+        ),
+        // --- Domain Layer: Provide the Use Case (depends on Repository) ---
+        ProxyProvider<GraphQLRepositoryImpl, GetCapsulesUseCase>(
+          // The Use Case takes the Repository as an argument
+          update: (context, repository, previous) =>
+              GetCapsulesUseCase(repository),
+        ),
 
         // --- Presentation Layer: Provide the Notifier (depends on Use Case) ---
         ChangeNotifierProxyProvider<GetLaunchesUseCase, LaunchProvider>(
@@ -102,8 +118,20 @@ class _SpaceXAppState extends State<SpaceXApp> {
               previous ?? LaunchProvider(useCase),
         ),
 
-        // TODO: Add other notifiers (MissionNotifier, RocketNotifier, etc.)
-        // using the same ProxyProvider pattern to inject their respective Use Cases.
+        ChangeNotifierProxyProvider<GetCapsulesUseCase, CapsuleProvider>(
+          create: (context) => CapsuleProvider(
+            Provider.of<GetCapsulesUseCase>(context, listen: false),
+          ),
+          update: (context, useCase, previous) =>
+              previous ?? CapsuleProvider(useCase),
+        ),
+        ChangeNotifierProxyProvider<GetRocketsUseCase, RocketProvider>(
+          create: (context) => RocketProvider(
+            Provider.of<GetRocketsUseCase>(context, listen: false),
+          ),
+          update: (context, useCase, previous) =>
+              previous ?? RocketProvider(useCase),
+        ),
       ],
       child: Consumer2<ThemeProvider, LanguageProvider>(
         builder: (context, themeProvider, languageProvider, child) {
@@ -126,11 +154,8 @@ class _SpaceXAppState extends State<SpaceXApp> {
                   Locale('en', 'US'),
                   Locale('fr', 'FR'),
                 ],
-                home: const SplashScreen(),
-                getPages: [
-                  GetPage(name: '/', page: () => const SplashScreen()),
-                  GetPage(name: '/home', page: () => const HomeScreen()),
-                ],
+                initialRoute: Routes.splash,
+                getPages: AppPages.pages,
               );
             },
           );

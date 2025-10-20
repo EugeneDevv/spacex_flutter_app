@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:spacex_flutter_app/core/utils/colors.dart';
+
 String formatNumberConcise(num n) {
   // Return the number as is if it's less than 1000
   if (n < 1000) return n.toString();
@@ -27,4 +30,30 @@ String formatNumberConcise(num n) {
 
   // Fallback for very large numbers beyond T (or just return original)
   return n.toString();
+}
+
+Color getStatusColor(String? status, BuildContext context) {
+  switch (status?.toLowerCase()) {
+    case 'active':
+      return Colors.green;
+    case 'destroyed':
+      return Colors.red;
+    case 'unknown':
+      return Theme.of(context).colorScheme.onSurface;
+    default:
+      return Theme.of(context).colorScheme.onSurface;
+  }
+}
+
+Color getStatusTextColor(String? status, BuildContext context) {
+  switch (status?.toLowerCase()) {
+    case 'active':
+      return AppColors.success;
+    case 'destroyed':
+      return AppColors.error;
+    case 'unknown':
+      return Theme.of(context).colorScheme.onSurface;
+    default:
+      return Theme.of(context).colorScheme.onSurface;
+  }
 }

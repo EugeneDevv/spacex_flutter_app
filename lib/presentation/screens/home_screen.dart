@@ -6,7 +6,7 @@ import 'package:spacex_flutter_app/core/utils/colors.dart';
 import 'package:spacex_flutter_app/domain/entities/app_assets.dart';
 import 'package:spacex_flutter_app/presentation/screens/land_pad_list_screen.dart';
 import 'package:spacex_flutter_app/presentation/screens/launch_list_screen.dart';
-import 'package:spacex_flutter_app/presentation/screens/launch_pad_list_screen.dart';
+import 'package:spacex_flutter_app/presentation/screens/capsule_list_screen.dart';
 import 'package:spacex_flutter_app/presentation/screens/mission_list_screen.dart';
 import 'package:spacex_flutter_app/presentation/screens/rocket_list_screen.dart';
 
@@ -22,7 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // The list of pages corresponding to the bottom nav items
   final List<Widget> _pages = [
-    const LaunchPadListScreen(),
+    const CapsulesListScreen(),
+    // SizedBox(),
     const RocketListScreen(),
     // Launch list screen
     const LaunchListScreen(),
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           bottomNavItem(
               assetSvgPath: SpaceXSvgs.rocketLaunchPadIcon,
-              labelText: 'Launch Pads'),
+              labelText: 'Capsules'),
           bottomNavItem(
               assetSvgPath: SpaceXSvgs.rocketIcon, labelText: 'Rockets'),
           bottomNavItem(assetSvgPath: '', labelText: ''),

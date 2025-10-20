@@ -5,6 +5,7 @@ const String getPastLaunchesQuery = r'''
     launchesPast(offset: $offset, limit: $limit, find: $find, order: $order, sort: $sort) {
       id
       mission_name
+      details
       launch_date_utc
       launch_date_local
       launch_site {
@@ -34,6 +35,7 @@ query LaunchesUpcoming($limit: Int, $offset: Int, $order: String, $sort: String,
   launchesUpcoming(limit: $limit, offset: $offset, order: $order, sort: $sort, find: $find) {
     id
       mission_name
+      details
       launch_date_utc
       launch_date_local
       launch_site {
