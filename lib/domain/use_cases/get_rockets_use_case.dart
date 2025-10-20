@@ -26,7 +26,7 @@ class GetRocketsUseCase implements IRocketRepository {
 
     final rawDataList = await repository.executeListQuery(
       query: getAllRocketsQuery,
-      queryName: 'Rockets',
+      queryName: 'rockets',
       variables: variables,
     );
 

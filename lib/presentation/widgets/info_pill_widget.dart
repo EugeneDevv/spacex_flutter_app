@@ -22,6 +22,9 @@ class InfoPillWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
         borderRadius: BorderRadius.circular(40),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,12 +33,12 @@ class InfoPillWidget extends StatelessWidget {
           SvgPicture.asset(
             iconSvgPath,
             color: Theme.of(context).colorScheme.onSurface,
-            height: 18,
+            height: 14,
           ),
           verySmallHorizontalSizedBox,
           Text(
             label,
-            style: normalSize14Text(Theme.of(context).colorScheme.onSurface),
+            style: normalSize12Text(Theme.of(context).colorScheme.onSurface),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
