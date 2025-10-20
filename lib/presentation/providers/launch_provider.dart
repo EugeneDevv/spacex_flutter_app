@@ -24,12 +24,14 @@ class LaunchProvider extends ChangeNotifier {
   bool _pastHasMoreData = true;
   String? _pastErrorMessage;
   int _pastOffset = 0;
+  String? _pastMissionNameFilter; // NEW: Stores the current search query
 
   List<LaunchEntity> get pastLaunches => _pastLaunches;
   bool get isPastLoadingInitial => _isPastLoadingInitial;
   bool get isPastFetchingMore => _isPastFetchingMore;
   bool get pastHasMoreData => _pastHasMoreData;
   String? get pastErrorMessage => _pastErrorMessage;
+  String? get pastMissionNameFilter => _pastMissionNameFilter;
 
   // --- UPCOMING LAUNCH STATE ---
   List<LaunchEntity> _upcomingLaunches = [];
@@ -47,7 +49,11 @@ class LaunchProvider extends ChangeNotifier {
 
   // --- PAST LAUNCH METHODS ---
 
-  Future<void> fetchPastLaunches({bool isInitial = false}) async {
+  Future<void> fetchPastLaunches({
+    bool isInitial = false,
+    String? missionName, // NEW PARAMETER for filtering
+  }) async {
+    // If not initial, check pagination states
     if (!isInitial && (_isPastFetchingMore || !_pastHasMoreData)) return;
 
     if (isInitial) {
@@ -56,6 +62,8 @@ class LaunchProvider extends ChangeNotifier {
       _pastLaunches = [];
       _pastHasMoreData = true;
       _pastErrorMessage = null;
+      // Set the new filter for an initial search
+      _pastMissionNameFilter = missionName;
     } else {
       _isPastFetchingMore = true;
     }
@@ -65,6 +73,7 @@ class LaunchProvider extends ChangeNotifier {
       final newLaunches = await getLaunchesUseCase.getPastLaunches(
         limit: _pageSize,
         offset: _pastOffset,
+        missionName: _pastMissionNameFilter ?? '',
       );
 
       if (newLaunches.isEmpty) {
@@ -137,6 +146,7 @@ class LaunchProvider extends ChangeNotifier {
     _upcomingHasMoreData = true;
     _pastErrorMessage = null;
     _upcomingErrorMessage = null;
+    _pastMissionNameFilter = null; // Clear the search filter
     notifyListeners();
   }
 }

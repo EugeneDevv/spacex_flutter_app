@@ -4,6 +4,7 @@ abstract class ILaunchRepository {
     Future<List<LaunchEntity>> getPastLaunches({
     required int limit,
     required int offset,
+    required String missionName,
   });
 
     Future<List<LaunchEntity>> getUpComingLaunches({

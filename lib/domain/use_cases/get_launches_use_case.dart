@@ -19,10 +19,12 @@ class GetLaunchesUseCase implements ILaunchRepository {
   Future<List<LaunchEntity>> getPastLaunches({
     required int limit,
     required int offset,
+    required String missionName,
   }) async {
     final variables = {
       'limit': limit,
       'offset': offset,
+      'mission_name': missionName,
     };
 
     final rawDataList = await repository.executeListQuery(
