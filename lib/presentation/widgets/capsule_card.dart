@@ -3,7 +3,7 @@ import 'package:spacex_flutter_app/core/utils/colors.dart';
 import 'package:spacex_flutter_app/core/utils/text_theme.dart';
 import 'package:spacex_flutter_app/data/models/capsule_model.dart';
 import 'package:spacex_flutter_app/presentation/utils/helper_functions.dart';
-import 'package:spacex_flutter_app/presentation/views/status_badge.dart';
+import 'package:spacex_flutter_app/presentation/widgets/status_badge.dart';
 import 'package:spacex_flutter_app/presentation/widgets/spaces.dart';
 
 class CapsuleCard extends StatelessWidget {

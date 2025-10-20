@@ -55,9 +55,9 @@ class RocketProvider extends ChangeNotifier {
         _hasMoreData = newRockets.length == _pageSize;
       }
     } catch (e) {
-      if (kDebugMode) print('Past Rockets Notifier Error: $e');
+      if (kDebugMode) print('Rockets Notifier Error: $e');
       _errorMessage =
-          'Failed to load past launches: Check network connection.';
+          'Failed to load rockets: Check network connection.';
       _hasMoreData = false;
     } finally {
       _isLoadingInitial = false;

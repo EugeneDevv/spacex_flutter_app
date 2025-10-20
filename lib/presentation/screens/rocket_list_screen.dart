@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:spacex_flutter_app/core/utils/colors.dart';
 import 'package:spacex_flutter_app/presentation/providers/rocket_provider.dart';
 import 'package:spacex_flutter_app/presentation/widgets/custom_app_bar_widget.dart';
+import 'package:spacex_flutter_app/presentation/widgets/rocket_card.dart';
 
 class RocketListScreen extends StatefulWidget {
   const RocketListScreen({super.key});
@@ -106,61 +106,30 @@ class _RocketListScreenState extends State<RocketListScreen> {
       }
 
       // 4. Data List View with Pagination Footer
-      return ListView.builder(
-        controller: _scrollController,
-        // Add 1 to the item count to reserve space for the pagination footer/indicator
-        itemCount: notifier.rockets.length + 1,
-        itemBuilder: (context, index) {
-          if (index == notifier.rockets.length) {
-            // This is the pagination footer/load more indicator
-            if (notifier.isFetchingMore) {
-              return const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-              );
-            } else if (!notifier.hasMoreData) {
-              // End of results message
-              return const Padding(
-                padding: EdgeInsets.all(24.0),
-                child: Center(
-                  child: Text(
-                    'End of the Rocket History.',
-                    style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        color: AppColors.lightGrey),
-                  ),
-                ),
-              );
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: ListView.builder(
+          controller: _scrollController,
+          // Add 1 to the item count to reserve space for the pagination footer/indicator
+          itemCount: notifier.rockets.length + 1,
+          itemBuilder: (context, index) {
+            if (index == notifier.rockets.length) {
+              // This is the pagination footer/load more indicator
+              if (notifier.isFetchingMore) {
+                return const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child:
+                      Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                );
+              }
+              // Default empty space if we still have more data but haven't triggered a fetch yet
+              return const SizedBox(height: 24);
             }
-            // Default empty space if we still have more data but haven't triggered a fetch yet
-            return const SizedBox(height: 24);
-          }
 
-          final rocket = notifier.rockets[index];
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(12.0),
-              border: Border.all(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  rocket.type ?? 'Unknown Type',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface),
-                ),
-                const SizedBox(height: 8),
-              ],
-            ),
-          );
-        },
+            final rocket = notifier.rockets[index];
+            return RocketCard(rocket: rocket);
+          },
+        ),
       );
     }
 

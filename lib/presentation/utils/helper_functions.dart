@@ -32,6 +32,51 @@ String formatNumberConcise(num n) {
   return n.toString();
 }
 
+String formatWeightInTonnes(num n) {
+  // 1. If the weight is less than 1000 kg, display it in kilograms.
+  if (n < 1000) {
+    // Ensure no unnecessary decimals for whole numbers
+    return '${n.toStringAsFixed(n == n.toInt() ? 0 : 1)} kg';
+  }
+
+  // 2. If the weight is 1000 kg or more, display it in tonnes.
+  const num tonne = 1000;
+  final value = n / tonne; // Convert kilograms to tonnes
+  
+  // Check if the value is essentially an integer (e.g., 6.0 t)
+  // We use 0.05 as a tolerance for rounding.
+  if ((value - value.truncate()).abs() < 0.05) {
+    // Return as an integer (e.g., "6 t")
+    return '${value.toInt()} t';
+  } else {
+    // Otherwise, return with one decimal place (e.g., "6.5 t")
+    return '${value.toStringAsFixed(1)} t';
+  }
+}
+
+String formatDistanceConcise(num n) {
+  // If the distance is less than 1000 meters, display it in meters (m).
+  if (n < 1000) {
+    // Return with one decimal place only if it's not a whole number.
+    return '${n.toStringAsFixed(n == n.toInt() ? 0 : 1)} m';
+  }
+
+  // If the distance is 1000 m or more, display it in kilometers (km).
+  const num kilometer = 1000;
+  final value = n / kilometer; // Convert meters to kilometers
+  
+  // Check if the value is essentially an integer (e.g., 6.0 km)
+  // We use 0.05 as a tolerance for rounding to avoid unnecessary decimals.
+  if ((value - value.truncate()).abs() < 0.05) {
+    // Return as an integer (e.g., "6 km")
+    return '${value.toInt()} km';
+  } else {
+    // Otherwise, return with one decimal place (e.g., "6.5 km")
+    return '${value.toStringAsFixed(1)} km';
+  }
+}
+
+
 Color getStatusColor(String? status, BuildContext context) {
   switch (status?.toLowerCase()) {
     case 'active':

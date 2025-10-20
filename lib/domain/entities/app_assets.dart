@@ -16,6 +16,14 @@ class SpaceXSvgs {
       'assets/icons/vertical_rocket_icon.svg';
   static const String dollarRocketIcon =
       'assets/icons/dollar_icon.svg';
+  static const String locationIcon =
+      'assets/icons/location_icon.svg';
+  static const String weightIcon =
+      'assets/icons/weight_icon.svg';
+  static const String heightIcon =
+      'assets/icons/height_icon.svg';
+  static const String widthIcon =
+      'assets/icons/width_icon.svg';
 }
 
 class SpaceXAnimations {
