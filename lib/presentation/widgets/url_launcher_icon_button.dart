@@ -16,12 +16,12 @@ class UrlLauncherIcon extends StatelessWidget {
   });
 
   Future<void> _launchUrl() async {
-    final uri = Uri.parse(url);
-    // if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-    //   // In a real application, you'd show a Snackbar or dialog here.
-    //   // For now, we'll print an error in debug mode.
-    //   debugPrint('Could not launch $url');
-    // }
+  //   final uri = Uri.parse(url);
+  //   if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+  //     // In a real application, you'd show a Snackbar or dialog here.
+  //     // For now, we'll print an error in debug mode.
+  //     debugPrint('Could not launch $url');
+  //   }
   }
 
   @override

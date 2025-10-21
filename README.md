@@ -12,6 +12,7 @@ A Flutter application development challenge focused on creating a beautiful UI/U
 - [Design System](#design-system)
 - [Evaluation Criteria](#evaluation-criteria)
 - [Submission Guidelines](#submission-guidelines)
+- [Screenshots](#sscreenshots)
 
 ## 🎯 Challenge Overview
 
@@ -30,9 +31,119 @@ This repository contains a base Flutter project structure that applicants need t
 ### Prerequisites
 
 - Flutter SDK (3.0+)
-- Dart SDK (3.0+)
+- Dart SDK (3.16+)
 - Android Studio / VS Code
 - Git
+
+## 📦 Installation Guide
+
+### System Requirements
+
+#### Minimum Requirements
+- **Operating System**: Windows 10/11, macOS 10.14+, or Ubuntu 18.04+
+- **RAM**: 8GB (16GB recommended)
+- **Storage**: 10GB free space
+- **Internet**: Stable connection for API calls and package downloads
+
+#### Required Software
+
+##### 1. Flutter SDK Installation
+
+**Windows:**
+```bash
+# Download Flutter SDK from https://flutter.dev/docs/get-started/install/windows
+# Extract to C:\flutter
+# Add C:\flutter\bin to PATH environment variable
+
+# Verify installation
+flutter doctor
+```
+
+**macOS:**
+```bash
+# Using Homebrew (recommended)
+brew install flutter
+
+# Or download from https://flutter.dev/docs/get-started/install/macos
+# Extract and add to PATH
+
+# Verify installation
+flutter doctor
+```
+
+**Linux:**
+```bash
+# Download Flutter SDK
+wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.16.0-stable.tar.xz
+
+# Extract and add to PATH
+tar xf flutter_linux_3.16.0-stable.tar.xz
+export PATH="$PATH:`pwd`/flutter/bin"
+
+# Verify installation
+flutter doctor
+```
+
+##### 2. Development Environment Setup
+
+**Android Studio (Recommended):**
+1. Download from [developer.android.com](https://developer.android.com/studio)
+2. Install Android SDK (API level 30+)
+3. Install Flutter and Dart plugins
+4. Configure Android emulator
+
+**VS Code (Alternative):**
+1. Download from [code.visualstudio.com](https://code.visualstudio.com/)
+2. Install Flutter extension
+3. Install Dart extension
+
+##### 3. Additional Tools
+
+**Git:**
+```bash
+# Windows (using Chocolatey)
+choco install git
+
+# macOS (using Homebrew)
+brew install git
+
+# Linux (Ubuntu/Debian)
+sudo apt-get install git
+```
+
+**Chrome (for web development):**
+- Download from [google.com/chrome](https://www.google.com/chrome/)
+
+### Platform-Specific Setup
+
+#### Android Development
+```bash
+# Accept Android licenses
+flutter doctor --android-licenses
+```
+
+#### iOS Development (macOS only)
+```bash
+# Install Xcode from App Store
+# Install CocoaPods
+sudo gem install cocoapods
+```
+
+
+### Verification Steps
+
+Run the following commands to verify your setup:
+
+```bash
+# Check Flutter installation
+flutter doctor -v
+
+# Check available devices
+flutter devices
+
+# Check Flutter version
+flutter --version
+```
 
 ### Getting Started
 
@@ -246,12 +357,12 @@ query GetRockets {
 
 ### Submission Checklist
 
-- [ ] All required tasks completed
-- [ ] App runs without errors
-- [ ] Responsive design implemented
-- [ ] Clean, well-documented code
-- [ ] Updated README with implementation details
-- [ ] Screenshots included in repository
+- [x] All required tasks completed
+- [x] App runs without errors
+- [x] Responsive design implemented
+- [x] Clean, well-documented code
+- [x] Updated README with implementation details
+- [x] Screenshots included in repository
 
 ### How to Submit
 
@@ -289,10 +400,17 @@ query GetRockets {
 - [GraphQL Flutter](https://pub.dev/packages/graphql_flutter)
 - [GraphQL Documentation](https://graphql.org/learn/)
 
-## 📞 Support
-
-For questions about the challenge, please contact the development team.
-
----
-
-**Good luck and happy coding! 🚀**
+## Screenshots
+<p align="left">
+  <img src="screenshots/upcoming-launches.png" width="300" title="Upcoming Launches">
+  <img src="screenshots/past-launches.png" width="300" title="Past Launches">
+  <img src="screenshots/launch-details.png" width="300" title="Launch Details Screen">
+  <img src="screenshots/capsules-grid.png" width="300" title="Capsules Grid">
+  <img src="screenshots/capsules-list.png" width="300" title="Capsules List">
+  <img src="screenshots/empty-state.png" width="300" title="Empty State">
+  <img src="screenshots/error-state.png" width="300" title="Error State">
+  <img src="screenshots/rockets-list.png" width="300" title="Rockets List">
+  <img src="screenshots/rocket-details.png" width="300" title="Rocket Details Screen">
+  <img src="screenshots/localization.png" width="300" title="Localization">
+  <img src="screenshots/responsiveness.png" width="300" title="Responsiveness">
+</p>
