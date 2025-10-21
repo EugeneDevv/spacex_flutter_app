@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:spacex_flutter_app/core/utils/colors.dart';
 import 'package:spacex_flutter_app/presentation/providers/launch_provider.dart';
@@ -195,39 +196,51 @@ class _PastLaunchListViewState extends State<PastLaunchListView> {
     }
 
     // 4. Data List View with Pagination Footer
-    return ListView.builder(
-      controller: _scrollController,
-      // Add 1 to the item count to reserve space for the pagination footer/indicator
-      itemCount: notifier.pastLaunches.length + 1,
-      itemBuilder: (context, index) {
-        if (index == notifier.pastLaunches.length) {
-          // This is the pagination footer/load more indicator
-          if (notifier.isPastFetchingMore) {
-            return const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-            );
-          } else if (!notifier.pastHasMoreData) {
-            // End of results message
-            return const Padding(
-              padding: EdgeInsets.all(24.0),
-              child: Center(
-                child: Text(
-                  'End of the Launch History.',
-                  style: TextStyle(
-                      fontStyle: FontStyle.italic, color: AppColors.lightGrey),
+    return AnimationLimiter(
+      child: ListView.builder(
+        controller: _scrollController,
+        // Add 1 to the item count to reserve space for the pagination footer/indicator
+        itemCount: notifier.pastLaunches.length + 1,
+        itemBuilder: (context, index) {
+          if (index == notifier.pastLaunches.length) {
+            // This is the pagination footer/load more indicator
+            if (notifier.isPastFetchingMore) {
+              return const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+              );
+            } else if (!notifier.pastHasMoreData) {
+              // End of results message
+              return const Padding(
+                padding: EdgeInsets.all(24.0),
+                child: Center(
+                  child: Text(
+                    'End of the Launch History.',
+                    style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: AppColors.lightGrey),
+                  ),
                 ),
-              ),
-            );
+              );
+            }
+            // Default empty space if we still have more data but haven't triggered a fetch yet
+            return const SizedBox(height: 24);
           }
-          // Default empty space if we still have more data but haven't triggered a fetch yet
-          return const SizedBox(height: 24);
-        }
 
-        // Standard Launch Card item
-        final launch = notifier.pastLaunches[index];
-        return LaunchCard(launch: launch);
-      },
+          // Standard Launch Card item
+          final launch = notifier.pastLaunches[index];
+          return AnimationConfiguration.staggeredList(
+            position: index,
+            duration: const Duration(milliseconds: 375),
+            child: SlideAnimation(
+              horizontalOffset: 50,
+              child: FadeInAnimation(
+                child: LaunchCard(launch: launch),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

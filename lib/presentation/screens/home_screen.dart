@@ -3,12 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spacex_flutter_app/core/utils/colors.dart';
+import 'package:spacex_flutter_app/core/utils/localization/language_constants.dart';
 import 'package:spacex_flutter_app/domain/entities/app_assets.dart';
-import 'package:spacex_flutter_app/presentation/screens/land_pad_list_screen.dart';
+import 'package:spacex_flutter_app/presentation/screens/settings_screen.dart';
 import 'package:spacex_flutter_app/presentation/screens/launch_list_screen.dart';
 import 'package:spacex_flutter_app/presentation/screens/capsule_list_screen.dart';
 import 'package:spacex_flutter_app/presentation/screens/mission_list_screen.dart';
 import 'package:spacex_flutter_app/presentation/screens/rocket_list_screen.dart';
+import 'package:spacex_flutter_app/presentation/utils/helper_functions.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Launch list screen is the center FAB/Rail target
     const LaunchListScreen(),
     const MissionListScreen(),
-    const LandPadListScreen(),
+    const SettingsScreen(),
   ];
 
   void _onTap(int index) {
@@ -64,14 +66,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Build the layout for wide screens (Navigation Rail)
   Widget _buildWideLayout(BuildContext context) {
+    // The Row is now only the BODY content below the AppBar
     return Row(
       children: [
+        // The NavigationRail now starts below the AppBar
         NavigationRail(
           backgroundColor: AppColors.darkCardColor,
           selectedIndex: _currentIndex,
           onDestinationSelected: _onTap,
           labelType: NavigationRailLabelType.all,
-          selectedIconTheme: const IconThemeData(color: AppColors.secondary),
           unselectedIconTheme: IconThemeData(
               color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.6)),
           selectedLabelTextStyle: const TextStyle(
@@ -81,41 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
           unselectedLabelTextStyle: TextStyle(
               color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.6),
               fontSize: 12),
-
-          // Custom FAB-like header for the Launches screen
-          leading: Padding(
-            padding: const EdgeInsets.only(top: 16.0, bottom: 24.0),
-            child: InkWell(
-              onTap: () => _onTap(2), // Index 2 is Launches
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _currentIndex == 2
-                      ? AppColors.secondary.withOpacity(0.2)
-                      : Colors.transparent,
-                  border: Border.all(
-                    color: _currentIndex == 2
-                        ? AppColors.secondary
-                        : AppColors.lightSurface.withOpacity(0.2),
-                    width: 2.0,
-                  ),
-                ),
-                child: Center(
-                  child: SvgPicture.asset(
-                    SpaceXSvgs.rocketLaunchIcon,
-                    color: _currentIndex == 2
-                        ? AppColors.secondary
-                        : AppColors.lightSurface.withOpacity(0.6),
-                    width: 32,
-                    height: 32,
-                  ),
-                ),
-              ),
-            ),
-          ),
-
           destinations: [
             NavigationRailDestination(
               icon: SvgPicture.asset(SpaceXSvgs.rocketLaunchPadIcon,
@@ -138,8 +106,14 @@ class _HomeScreenState extends State<HomeScreen> {
               label: const Text('Rockets'),
             ),
             // Placeholder destination for the launch screen (Index 2) - Label only
-            const NavigationRailDestination(
-              icon: SizedBox(),
+            NavigationRailDestination(
+              icon: SvgPicture.asset(SpaceXSvgs.rocketLaunchIcon,
+                  color:
+                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.6),
+                  width: 24,
+                  height: 24),
+              selectedIcon: SvgPicture.asset(SpaceXSvgs.rocketLaunchIcon,
+                  color: AppColors.secondary, width: 24, height: 24),
               label: Text('Launches'),
             ),
             NavigationRailDestination(
@@ -153,14 +127,14 @@ class _HomeScreenState extends State<HomeScreen> {
               label: const Text('Missions'),
             ),
             NavigationRailDestination(
-              icon: SvgPicture.asset(SpaceXSvgs.landingPadIcon,
+              icon: SvgPicture.asset(SpaceXSvgs.settingsIcon,
                   color:
                       Theme.of(context).colorScheme.onPrimary.withOpacity(0.6),
                   width: 24,
                   height: 24),
-              selectedIcon: SvgPicture.asset(SpaceXSvgs.landingPadIcon,
+              selectedIcon: SvgPicture.asset(SpaceXSvgs.settingsIcon,
                   color: AppColors.secondary, width: 24, height: 24),
-              label: const Text('Land Pads'),
+              label: Text(getTranslated(context, 'settings') ?? 'Settings'),
             ),
           ],
         ),
@@ -181,14 +155,17 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Build the layout for compact screens (Bottom Nav Bar + FAB)
   Widget _buildCompactLayout(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       // Prevents body from resizing when keyboard opens
       resizeToAvoidBottomInset: false,
 
       // IndexedStack is key for state preservation.
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: buildBackgroundBody(
+          context,
+          IndexedStack(
+            index: _currentIndex,
+            children: _pages,
+          )),
 
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.darkCardColor, // Dark background
@@ -218,8 +195,8 @@ class _HomeScreenState extends State<HomeScreen> {
               labelText: 'Missions',
               isSelected: _currentIndex == 3),
           _bottomNavItem(
-              assetSvgPath: SpaceXSvgs.landingPadIcon,
-              labelText: 'Land Pads',
+              assetSvgPath: SpaceXSvgs.settingsIcon,
+              labelText: getTranslated(context, 'settings') ?? 'Settings',
               isSelected: _currentIndex == 4),
         ],
       ),
@@ -272,8 +249,17 @@ class _HomeScreenState extends State<HomeScreen> {
     if (screenWidth >= _tabletBreakpoint) {
       // Use the NavigationRail layout for tablets/desktop
       return Scaffold(
-        resizeToAvoidBottomInset: false, // Apply this here too for consistency
-        body: _buildWideLayout(context),
+        backgroundColor: Colors.transparent,
+        // --- CHANGE 1: ADD APPBAR HERE ---
+        appBar: AppBar(
+          title: Text(getTranslated(context, 'app_title') ?? 'SpaceX Explorer'),
+          backgroundColor: AppColors.darkCardColor,
+          elevation: 0,
+        ),
+        resizeToAvoidBottomInset: false,
+        // --- CHANGE 2: CALL _buildWideLayout as the body ---
+        // The body now correctly sits below the AppBar, making the NavigationRail also start below it.
+        body: buildBackgroundBody(context, _buildWideLayout(context)),
       );
     } else {
       // Use the BottomNavigationBar layout for phones

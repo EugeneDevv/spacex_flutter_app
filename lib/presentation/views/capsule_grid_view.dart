@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:spacex_flutter_app/data/models/capsule_model.dart';
 import 'package:spacex_flutter_app/presentation/widgets/capsule_card.dart';
 
@@ -49,41 +50,53 @@ class CapsuleGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      controller: scrollController,
-      // The CustomScrollView's children are called "slivers"
-      slivers: [
-        // 1. SliverGrid for the main card content
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          sliver: SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 8.0,
-              crossAxisSpacing: 8.0,
-              childAspectRatio: 3 / 2,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final capsule = capsules[index];
-                final status = capsule.status ?? 'retired';
-                return CapsuleCard(
-                  capsule: capsule,
-                  status: status,
-                  miniBadge: true,
-                );
-              },
-              // The childCount is exactly the number of cards
-              childCount: capsules.length,
+    return AnimationLimiter(
+      child: CustomScrollView(
+        controller: scrollController,
+        // The CustomScrollView's children are called "slivers"
+        slivers: [
+          // 1. SliverGrid for the main card content
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 8.0,
+                crossAxisSpacing: 8.0,
+                childAspectRatio: 3 / 2,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final capsule = capsules[index];
+                  final status = capsule.status ?? 'retired';
+
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 375),
+                    child: SlideAnimation(
+                      horizontalOffset: 50,
+                      child: FadeInAnimation(
+                        child: CapsuleCard(
+                          capsule: capsule,
+                          status: status,
+                          miniBadge: true,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                // The childCount is exactly the number of cards
+                childCount: capsules.length,
+              ),
             ),
           ),
-        ),
 
-        // 2. SliverToBoxAdapter for the full-width footer
-        SliverToBoxAdapter(
-          child: _buildFooter(),
-        ),
-      ],
+          // 2. SliverToBoxAdapter for the full-width footer
+          SliverToBoxAdapter(
+            child: _buildFooter(),
+          ),
+        ],
+      ),
     );
   }
 }

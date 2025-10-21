@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
+import 'package:spacex_flutter_app/core/utils/localization/language_constants.dart';
 import 'package:spacex_flutter_app/presentation/providers/rocket_provider.dart';
 import 'package:spacex_flutter_app/presentation/widgets/custom_app_bar_widget.dart';
+import 'package:spacex_flutter_app/presentation/widgets/error_state_widget.dart';
 import 'package:spacex_flutter_app/presentation/widgets/rocket_card.dart';
+import 'package:spacex_flutter_app/presentation/widgets/zero_state_widget.dart';
 
 class RocketListScreen extends StatefulWidget {
   const RocketListScreen({super.key});
@@ -61,74 +65,55 @@ class _RocketListScreenState extends State<RocketListScreen> {
 
       // 2. Error State
       if (notifier.errorMessage != null) {
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error_outline, color: Colors.red, size: 48),
-                const SizedBox(height: 16),
-                Text(
-                  notifier.errorMessage!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 16, color: Colors.redAccent),
-                ),
-                const SizedBox(height: 16),
-                // Button to retry fetching
-                ElevatedButton.icon(
-                  onPressed: () => notifier.fetchRockets(isInitial: true),
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Try Again'),
-                ),
-              ],
-            ),
-          ),
+        return ErrorStateWidget(
+          errorMessage: notifier.errorMessage,
+          callBack: () => notifier.fetchRockets(isInitial: true),
         );
       }
 
       // 3. Empty State (No Data)
       if (notifier.rockets.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.satellite_alt_outlined,
-                  size: 64, color: Colors.grey),
-              const SizedBox(height: 16),
-              Text(
-                'No rockets found.',
-                style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-              ),
-            ],
-          ),
+        return ZeroStateWidget(
+          callBack: () => notifier.fetchRockets(isInitial: true),
         );
       }
 
       // 4. Data List View with Pagination Footer
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: ListView.builder(
-          controller: _scrollController,
-          // Add 1 to the item count to reserve space for the pagination footer/indicator
-          itemCount: notifier.rockets.length + 1,
-          itemBuilder: (context, index) {
-            if (index == notifier.rockets.length) {
-              // This is the pagination footer/load more indicator
-              if (notifier.isFetchingMore) {
-                return const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child:
-                      Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                );
+        child: AnimationLimiter(
+          child: ListView.builder(
+            controller: _scrollController,
+            // Add 1 to the item count to reserve space for the pagination footer/indicator
+            itemCount: notifier.rockets.length + 1,
+            itemBuilder: (context, index) {
+              if (index == notifier.rockets.length) {
+                // This is the pagination footer/load more indicator
+                if (notifier.isFetchingMore) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(
+                        child: CircularProgressIndicator(strokeWidth: 2)),
+                  );
+                }
+                // Default empty space if we still have more data but haven't triggered a fetch yet
+                return const SizedBox(height: 24);
               }
-              // Default empty space if we still have more data but haven't triggered a fetch yet
-              return const SizedBox(height: 24);
-            }
 
-            final rocket = notifier.rockets[index];
-            return RocketCard(rocket: rocket);
-          },
+              final rocket = notifier.rockets[index];
+
+              return AnimationConfiguration.staggeredList(
+                position: index,
+                duration: const Duration(milliseconds: 375),
+                child: SlideAnimation(
+                  horizontalOffset: 50,
+                  child: FadeInAnimation(
+                    child: RocketCard(rocket: rocket),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       );
     }
@@ -137,7 +122,10 @@ class _RocketListScreenState extends State<RocketListScreen> {
       builder: (context, notifier, child) {
         // Wrap the body in a RefreshIndicator for pull-to-refresh
         return Scaffold(
-          appBar: const CustomAppBar(showBackButton: false, title: 'Rockets'),
+          backgroundColor: Colors.transparent,
+          appBar: CustomAppBar(
+              showBackButton: false,
+              title: getTranslated(context, 'rockets') ?? 'Rockets'),
           body: RefreshIndicator(
             // When pulled, reset state and fetch the first page
             onRefresh: () => notifier.fetchRockets(isInitial: true),

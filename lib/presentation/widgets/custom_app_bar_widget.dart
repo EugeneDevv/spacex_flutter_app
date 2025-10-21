@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:spacex_flutter_app/core/utils/text_theme.dart';
+import 'package:spacex_flutter_app/presentation/providers/language_provider.dart';
 import 'package:spacex_flutter_app/presentation/providers/theme_provider.dart';
 import 'package:spacex_flutter_app/presentation/widgets/app_back_button.dart';
 
@@ -31,13 +32,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
-        // Determine the current icon based on the theme mode
+    return Consumer2<ThemeProvider, LanguageProvider>(
+      builder: (context, themeProvider, languageProvider, child) {
+        // Theme Toggle Icon
         final isDarkMode = themeProvider.themeMode == ThemeMode.dark;
-        final icon = isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined;
+        final themeIcon =
+            isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined;
+
+        // Current Language Code (e.g., 'EN' or 'FR')
+        final currentLangCode =
+            languageProvider.currentLocaleCode.toUpperCase();
 
         return AppBar(
+          backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           centerTitle: centerTitle,
           leadingWidth: showBackButton ? 72 : null,
@@ -64,11 +71,35 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               Theme.of(context).colorScheme.onSurface),
                     )
                   : null),
-          // --- Theme Toggle Action ---
+          // --- Action Buttons ---
           actions: [
+            // 1. Language Toggle Action
+            PopupMenuButton<String>(
+              icon: Text(
+                currentLangCode,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onSelected: (String languageCode) {
+                // 'en' or 'fr'
+                languageProvider.setLanguage(context, languageCode);
+              },
+              itemBuilder: (BuildContext context) {
+                return languageProvider.languages.map((lang) {
+                  return PopupMenuItem<String>(
+                    value: lang.languageCode,
+                    child: Text(lang.name),
+                  );
+                }).toList();
+              },
+            ),
+
+            // 2. Theme Toggle Action
             IconButton(
               icon: Icon(
-                icon,
+                themeIcon,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
               onPressed: () {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spacex_flutter_app/core/utils/colors.dart';
+import 'package:spacex_flutter_app/core/utils/localization/language_constants.dart';
 import 'package:spacex_flutter_app/presentation/views/past_launch_list_view.dart';
 import 'package:spacex_flutter_app/presentation/views/upcoming_launch_list_view.dart';
 import 'package:spacex_flutter_app/presentation/widgets/custom_app_bar_widget.dart';
@@ -32,7 +33,10 @@ class _LaunchListScreenState extends State<LaunchListScreen>
   Widget build(BuildContext context) {
     // We use a Builder here to provide a Scrollable view for the RefreshIndicator
     return Scaffold(
-      appBar: const CustomAppBar(showBackButton: false, title: 'Launches'),
+      backgroundColor: Colors.transparent,
+      appBar: CustomAppBar(
+          showBackButton: false,
+          title: getTranslated(context, 'launches') ?? 'Launches'),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
@@ -60,9 +64,9 @@ class _LaunchListScreenState extends State<LaunchListScreen>
               // Color for selected and unselected labels
               labelColor: Theme.of(context).colorScheme.onPrimary,
               unselectedLabelColor: AppColors.lightGrey,
-              tabs: const [
-                Tab(text: 'Upcoming'),
-                Tab(text: 'Past'),
+              tabs: [
+                Tab(text: getTranslated(context, 'upcoming') ?? 'Upcoming'),
+                Tab(text: getTranslated(context, 'past') ?? 'Past'),
               ],
             ),
             verySmallVerticalSizedBox,

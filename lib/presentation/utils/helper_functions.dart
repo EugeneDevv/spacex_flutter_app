@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spacex_flutter_app/core/utils/colors.dart';
+import 'package:spacex_flutter_app/domain/entities/app_assets.dart';
 
 String formatNumberConcise(num n) {
   // Return the number as is if it's less than 1000
@@ -101,4 +102,24 @@ Color getStatusTextColor(String? status, BuildContext context) {
     default:
       return Theme.of(context).colorScheme.onSurface;
   }
+}
+
+Widget buildBackgroundBody(BuildContext context, Widget content) {
+  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  final backgroundImage = isDarkMode
+      ? SpaceXPngs.scaffoldBackground // Dark theme background
+      : SpaceXPngs.scaffoldBackgroundLight; // Light theme background
+
+  return Stack(
+    fit: StackFit.expand,
+    children: [
+      // Background Image
+      Image.asset(
+        backgroundImage,
+        fit: BoxFit.cover,
+      ),
+      // Foreground Content
+      content,
+    ],
+  );
 }

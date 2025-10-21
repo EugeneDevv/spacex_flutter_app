@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:spacex_flutter_app/core/utils/colors.dart';
+import 'package:spacex_flutter_app/core/utils/localization/language_constants.dart';
 import 'package:spacex_flutter_app/core/utils/text_theme.dart';
 import 'package:spacex_flutter_app/data/models/rocket_model.dart';
 import 'package:spacex_flutter_app/domain/entities/app_assets.dart';
@@ -30,7 +31,7 @@ class RocketCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 8.0),
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
           borderRadius: BorderRadius.circular(12.0),
           border:
               Border.all(color: Theme.of(context).colorScheme.onSurfaceVariant),
@@ -44,7 +45,9 @@ class RocketCard extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    rocket.name ?? 'Unknown',
+                    rocket.name ??
+                        getTranslated(context, 'unknown') ??
+                        'Unknown',
                     style: mediumSize16Text(
                         Theme.of(context).colorScheme.onSurface),
                     maxLines: 1,
@@ -94,11 +97,11 @@ class RocketCard extends StatelessWidget {
               direction: Axis.horizontal,
               runAlignment: WrapAlignment.start,
               children: [
-                if(rocket.country?.isNotEmpty ?? false)
-                InfoPillWidget(
-                  label: rocket.country!,
-                  iconSvgPath: SpaceXSvgs.locationIcon,
-                ),
+                if (rocket.country?.isNotEmpty ?? false)
+                  InfoPillWidget(
+                    label: rocket.country!,
+                    iconSvgPath: SpaceXSvgs.locationIcon,
+                  ),
                 if ((rocket.costPerLaunch ?? 0) > 0)
                   InfoPillWidget(
                     label: formatNumberConcise(rocket.costPerLaunch!),
@@ -127,7 +130,8 @@ class RocketCard extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    rocket.company ?? 'Unknown',
+                    rocket.company ?? getTranslated(context, 'unknown') ??
+                        'Unknown',
                     style: normalSize12Text(
                         Theme.of(context).colorScheme.onSurface),
                     maxLines: 1,

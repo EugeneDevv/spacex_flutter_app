@@ -1,19 +1,29 @@
 {
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
-      "name": "spacex_flutter_app(debug)",
-      "type": "dart",
+      "name": "spacex_flutter_app",
       "request": "launch",
-      "program": "lib/main.dart",
-      "args": ["-v"]
+      "type": "dart",
+      "args": [
+        "-v"
+      ]
     },
     {
-      "name": "spacex_flutter_app(release)",
-      "type": "dart",
+      "name": "spacex_flutter_app (profile mode)",
       "request": "launch",
-      "flutterMode": "release",
-      "args": ["-v"]
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "spacex_flutter_app (release mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
     }
   ]
 }
