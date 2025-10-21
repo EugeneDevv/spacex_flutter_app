@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spacex_flutter_app/core/utils/colors.dart';
+import 'package:spacex_flutter_app/core/utils/localization/language_constants.dart';
 import 'package:spacex_flutter_app/core/utils/text_theme.dart';
 import 'package:spacex_flutter_app/data/models/capsule_model.dart';
 import 'package:spacex_flutter_app/presentation/utils/helper_functions.dart';
@@ -38,7 +39,7 @@ class CapsuleCard extends StatelessWidget {
           ),
           verySmallVerticalSizedBox,
           Text(
-            capsule.type ?? 'Unknown Type',
+            capsule.type ?? getTranslated(context, 'unknown') ?? 'Unknown',
             style: mediumSize16Text(status == 'active'
                 ? AppColors.success
                 : status == 'destroyed'

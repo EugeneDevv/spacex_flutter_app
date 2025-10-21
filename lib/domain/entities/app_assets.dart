@@ -10,8 +10,8 @@ class SpaceXSvgs {
       'assets/icons/rocket_icon.svg';
   static const String missionIcon =
       'assets/icons/mission_icon.svg';
-  static const String landingPadIcon =
-      'assets/icons/landing_pad_icon.svg';
+  static const String settingsIcon =
+      'assets/icons/settings_icon.svg';
   static const String verticalRocketIcon =
       'assets/icons/vertical_rocket_icon.svg';
   static const String dollarRocketIcon =
@@ -28,4 +28,8 @@ class SpaceXSvgs {
 
 class SpaceXAnimations {
   static const String sadErrorLottie = 'assets/animations/sad_error_lottie.json';
+}
+class SpaceXPngs {
+  static const String scaffoldBackground = 'assets/images/scaffold_background.png';
+  static const String scaffoldBackgroundLight = 'assets/images/scaffold_background_light.png';
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:spacex_flutter_app/core/utils/colors.dart';
+import 'package:spacex_flutter_app/core/utils/localization/language_constants.dart';
 import 'package:spacex_flutter_app/presentation/providers/capsule_provider.dart';
 import 'package:spacex_flutter_app/presentation/views/capsule_grid_view.dart';
 import 'package:spacex_flutter_app/presentation/views/capsule_list_view.dart';
 import 'package:spacex_flutter_app/presentation/widgets/custom_app_bar_widget.dart';
+import 'package:spacex_flutter_app/presentation/widgets/error_state_widget.dart';
+import 'package:spacex_flutter_app/presentation/widgets/zero_state_widget.dart';
 
 class CapsulesListScreen extends StatefulWidget {
   const CapsulesListScreen({super.key});
@@ -65,47 +67,16 @@ class _CapsulesListScreenState extends State<CapsulesListScreen> {
 
       // 2. Error State
       if (notifier.errorMessage != null) {
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error_outline, color: Colors.red, size: 48),
-                const SizedBox(height: 16),
-                Text(
-                  notifier.errorMessage!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 16, color: Colors.redAccent),
-                ),
-                const SizedBox(height: 16),
-                // Button to retry fetching
-                ElevatedButton.icon(
-                  onPressed: () => notifier.fetchCapsules(isInitial: true),
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Try Again'),
-                ),
-              ],
-            ),
-          ),
+        return ErrorStateWidget(
+          errorMessage: notifier.errorMessage,
+          callBack: () => notifier.fetchCapsules(isInitial: true),
         );
       }
 
       // 3. Empty State (No Data)
       if (notifier.capsules.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.satellite_alt_outlined,
-                  size: 64, color: Colors.grey),
-              const SizedBox(height: 16),
-              Text(
-                'No capsules found.',
-                style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-              ),
-            ],
-          ),
+        return ZeroStateWidget(
+          callBack: () => notifier.fetchCapsules(isInitial: true),
         );
       }
 
@@ -129,6 +100,7 @@ class _CapsulesListScreenState extends State<CapsulesListScreen> {
       builder: (context, notifier, child) {
         // Wrap the body in a RefreshIndicator for pull-to-refresh
         return Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: CustomAppBar(
               leadingWidget: IconButton(
                   onPressed: () => setState(() {
@@ -139,7 +111,7 @@ class _CapsulesListScreenState extends State<CapsulesListScreen> {
                     color: Theme.of(context).colorScheme.onSurface,
                   )),
               showBackButton: false,
-              title: 'Capsules'),
+              title: getTranslated(context, 'capsules') ?? 'Capsules'),
           body: RefreshIndicator(
             // When pulled, reset state and fetch the first page
             onRefresh: () => notifier.fetchCapsules(isInitial: true),

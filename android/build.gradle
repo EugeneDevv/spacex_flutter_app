@@ -1,15 +1,11 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    // Upgraded Kotlin version to support modern AGP
-    ext.kotlin_version = '1.8.20'
+    ext.kotlin_version = '1.7.10'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        // Upgraded AGP to 8.1.0 for compatibility with Gradle 8.x
-        classpath 'com.android.tools.build:gradle:8.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -26,10 +22,7 @@ subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
-    // This line is often unnecessary and can sometimes cause issues.
-    // If your app depends on any plugins that rely on project evaluation order, 
-    // it can lead to deadlocks or unexpected behavior. It is usually best to remove it.
-    // project.evaluationDependsOn(':app') 
+    project.evaluationDependsOn(':app')
 }
 
 tasks.register("clean", Delete) {

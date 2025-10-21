@@ -3,8 +3,8 @@ import 'package:spacex_flutter_app/core/utils/localization/language_constants.da
 import 'package:spacex_flutter_app/presentation/utils/helper_functions.dart';
 import 'package:spacex_flutter_app/presentation/widgets/custom_app_bar_widget.dart';
 
-class MissionListScreen extends StatelessWidget {
-  const MissionListScreen({super.key});
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class MissionListScreen extends StatelessWidget {
       Scaffold(
         backgroundColor: Colors.transparent,
         appBar: CustomAppBar(
-            title: getTranslated(context, 'missions') ?? 'Missions'),
+            title: getTranslated(context, 'settings') ?? 'Settings'),
       ),
     );
   }

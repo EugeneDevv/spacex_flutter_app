@@ -28,7 +28,7 @@ class LaunchCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 8.0),
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
           borderRadius: BorderRadius.circular(12.0),
           // Highlight the card based on launch success status
           border:

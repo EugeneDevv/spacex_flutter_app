@@ -14,6 +14,9 @@ class LanguageProvider extends ChangeNotifier {
   List<LanguageModel> get languages => _languages;
   bool get isInitialized => _isInitialized;
 
+  // New getter for the current language code (e.g., 'en', 'fr')
+  String get currentLocaleCode => _selectedLanguage.languageCode;
+
   LanguageProvider() {
     _selectedLanguage = _languages.first;
   }
@@ -94,6 +97,7 @@ class LanguageProvider extends ChangeNotifier {
 
       // Update the app locale
       final newLocale = Locale(language.languageCode, language.countryCode);
+      // Calls the static method on the main app widget to trigger setState
       SpaceXApp.setLocale(context, newLocale);
 
       notifyListeners();
@@ -119,7 +123,9 @@ class LanguageProvider extends ChangeNotifier {
   }
 }
 
-// Global reference to the app for locale changes
+// Global reference to the app for locale changes.
+// This static class method relies on the main StatefulWidget to find its State
+// and call setState with the new locale.
 class SpaceXApp {
   static void setLocale(BuildContext context, Locale newLocale) {
     // This will be handled by the main app widget

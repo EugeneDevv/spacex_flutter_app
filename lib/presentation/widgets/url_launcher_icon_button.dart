@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 class UrlLauncherIcon extends StatelessWidget {
   final String url;
@@ -17,11 +17,11 @@ class UrlLauncherIcon extends StatelessWidget {
 
   Future<void> _launchUrl() async {
     final uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      // In a real application, you'd show a Snackbar or dialog here.
-      // For now, we'll print an error in debug mode.
-      debugPrint('Could not launch $url');
-    }
+    // if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    //   // In a real application, you'd show a Snackbar or dialog here.
+    //   // For now, we'll print an error in debug mode.
+    //   debugPrint('Could not launch $url');
+    // }
   }
 
   @override

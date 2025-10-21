@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:spacex_flutter_app/core/utils/colors.dart';
 import 'package:spacex_flutter_app/presentation/providers/launch_provider.dart';
+import 'package:spacex_flutter_app/presentation/widgets/error_state_widget.dart';
 import 'package:spacex_flutter_app/presentation/widgets/launch_card.dart';
+import 'package:spacex_flutter_app/presentation/widgets/zero_state_widget.dart';
 
 class UpcomingLaunchListView extends StatefulWidget {
   const UpcomingLaunchListView({super.key});
@@ -11,8 +14,7 @@ class UpcomingLaunchListView extends StatefulWidget {
   State<UpcomingLaunchListView> createState() => _UpcomingLaunchListViewState();
 }
 
-class _UpcomingLaunchListViewState extends State<UpcomingLaunchListView>{
-
+class _UpcomingLaunchListViewState extends State<UpcomingLaunchListView> {
   // Controller to detect when the user scrolls near the bottom for pagination
   final ScrollController _scrollController = ScrollController();
 
@@ -43,11 +45,10 @@ class _UpcomingLaunchListViewState extends State<UpcomingLaunchListView>{
       notifier.fetchUpcomingLaunches();
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
-
-      // --- UI Building Logic based on Notifier State ---
+    // --- UI Building Logic based on Notifier State ---
 
     Widget buildBody(LaunchProvider notifier) {
       // 1. Initial Loading State (Loader)
@@ -57,87 +58,69 @@ class _UpcomingLaunchListViewState extends State<UpcomingLaunchListView>{
 
       // 2. Error State
       if (notifier.upcomingErrorMessage != null) {
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error_outline, color: Colors.red, size: 48),
-                const SizedBox(height: 16),
-                Text(
-                  notifier.upcomingErrorMessage!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 16, color: Colors.redAccent),
-                ),
-                const SizedBox(height: 16),
-                // Button to retry fetching
-                ElevatedButton.icon(
-                  onPressed: () => notifier.fetchUpcomingLaunches(isInitial: true),
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Try Again'),
-                ),
-              ],
-            ),
-          ),
+        return ErrorStateWidget(
+          errorMessage: notifier.upcomingErrorMessage,
+          callBack: () => notifier.fetchUpcomingLaunches(isInitial: true),
         );
       }
 
       // 3. Empty State (No Data)
       if (notifier.upcomingLaunches.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.satellite_alt_outlined,
-                  size: 64, color: Colors.grey),
-              const SizedBox(height: 16),
-              Text(
-                'No past launches found.',
-                style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-              ),
-            ],
-          ),
+        return ZeroStateWidget(
+          callBack: () => notifier.fetchUpcomingLaunches(isInitial: true),
         );
       }
 
       // 4. Data List View with Pagination Footer
-      return ListView.builder(
-        controller: _scrollController,
-        // Add 1 to the item count to reserve space for the pagination footer/indicator
-        itemCount: notifier.upcomingLaunches.length + 1,
-        itemBuilder: (context, index) {
-          if (index == notifier.upcomingLaunches.length) {
-            // This is the pagination footer/load more indicator
-            if (notifier.isUpcomingFetchingMore) {
-              return const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-              );
-            } else if (!notifier.upcomingHasMoreData) {
-              // End of results message
-              return const Padding(
-                padding: EdgeInsets.all(24.0),
-                child: Center(
-                  child: Text(
-                    'End of the Launch History.',
-                    style: TextStyle(
-                        fontStyle: FontStyle.italic, color: AppColors.lightGrey),
+      return AnimationLimiter(
+        child: ListView.builder(
+          controller: _scrollController,
+          // Add 1 to the item count to reserve space for the pagination footer/indicator
+          itemCount: notifier.upcomingLaunches.length + 1,
+          itemBuilder: (context, index) {
+            if (index == notifier.upcomingLaunches.length) {
+              // This is the pagination footer/load more indicator
+              if (notifier.isUpcomingFetchingMore) {
+                return const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child:
+                      Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                );
+              } else if (!notifier.upcomingHasMoreData) {
+                // End of results message
+                return const Padding(
+                  padding: EdgeInsets.all(24.0),
+                  child: Center(
+                    child: Text(
+                      'End of the Launch History.',
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          color: AppColors.lightGrey),
+                    ),
                   ),
-                ),
-              );
+                );
+              }
+              // Default empty space if we still have more data but haven't triggered a fetch yet
+              return const SizedBox(height: 24);
             }
-            // Default empty space if we still have more data but haven't triggered a fetch yet
-            return const SizedBox(height: 24);
-          }
 
-          // Standard Launch Card item
-          final launch = notifier.upcomingLaunches[index];
-          return LaunchCard(launch: launch);
-        },
+            // Standard Launch Card item
+            final launch = notifier.upcomingLaunches[index];
+            return AnimationConfiguration.staggeredList(
+              position: index,
+              duration: const Duration(milliseconds: 375),
+              child: SlideAnimation(
+                horizontalOffset: 50,
+                child: FadeInAnimation(
+                  child: LaunchCard(launch: launch),
+                ),
+              ),
+            );
+          },
+        ),
       );
     }
-    
+
     return Consumer<LaunchProvider>(
       builder: (context, notifier, child) {
         // Wrap the body in a RefreshIndicator for pull-to-refresh
